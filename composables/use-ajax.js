@@ -1,4 +1,4 @@
-export const useAJAX = function (url) {
+export const useAjax = function (url) {
     const isPending = ref(null)
     const error = ref(null)
     const data = ref(null)
@@ -21,10 +21,10 @@ export const useAJAX = function (url) {
 
             if (signal.aborted) {
                 // throw new Error('Timeout error. Failed to load the task.')
-                throw new Error('Failed to load the task.')
+                throw new Error('Failed to load the task. The loading time has been exceeded.')
             }
 
-            // trow error if response is false
+            // throw error if response is false
             if (response.ok == false) {
                 throw new Error('Failed to load the task. Wrong task id.')
             }
