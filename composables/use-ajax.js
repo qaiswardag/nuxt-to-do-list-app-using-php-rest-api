@@ -1,45 +1,51 @@
-export const useAjax = function (url) {
-    const isPending = ref(null)
-    const error = ref(null)
-    const data = ref(null)
-    const promise = usePromise(1000)
+export const useAjax = function () {
+    const isPending = ref(null);
+    const error = ref(null);
+    const data = ref(null);
 
-    const controller = new AbortController()
-    const signal = controller.signal
+    const controller = new AbortController();
+    const signal = controller.signal;
     //
-    setTimeout(() => {
-        controller.abort()
-    }, 8000)
+    const timer = setTimeout(() => {
+        controller.abort();
+    }, 2000);
 
-
-    const loadData = async function (url) {
+    const loadData = async function (url, data = {}, responseTime = 0) {
+        const promise = usePromise(responseTime);
         try {
-            isPending.value = true
-            await promise
-            const response = await fetch(url, {method: 'GET'});
-
+            isPending.value = true;
+            await promise;
+            const response = await fetch(url, data);
 
             if (signal.aborted) {
-                // throw new Error('Timeout error. Failed to load the task.')
-                throw new Error('Failed to load the task. The loading time has been exceeded.')
+                throw new Error('The loading time has been exceeded.');
             }
 
             // throw error if response is false
-            if (response.ok == false) {
-                throw new Error('Failed to load the task. Wrong task id.')
+            if (response.ok === false) {
+                throw new Error(`${response.statusText}. Response code: ${response.status}`);
             }
 
-            data.value = await response.json()
-            isPending.value = false
-            return data.value
+            // data
+            data.value = await response.json();
+
+            isPending.value = false;
+            clearTimeout(timer);
+
+            return data.value;
         } catch (err) {
-            isPending.value = false
+            isPending.value = false;
+            error.value = err.message;
             throw err;
 
         }
 
-    }
+    };
 
-
-    return {isPending, error, data, loadData}
-}
+    return {
+        isPending,
+        error,
+        data,
+        loadData
+    };
+};
