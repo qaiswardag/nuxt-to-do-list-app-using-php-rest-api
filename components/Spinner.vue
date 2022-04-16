@@ -1,8 +1,8 @@
 <template>
-  <div class="h-screen absolute inset-0 z-50">
+  <div class="h-screen absolute inset-0 z-50 bg-gray-100 opacity-90">
     <div class="flex h-full justify-center items-center">
       <svg
-          class="inline mr-2 w-14 h-14 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+          class="inline mr-2 w-14 h-14 text-yellow-300 animate-spin dark:text-gray-600 fill-yellow-600"
           fill="none"
           role="status" viewBox="0 0 100 101" xmlns="http://www.w3.org/2000/svg">
         <path

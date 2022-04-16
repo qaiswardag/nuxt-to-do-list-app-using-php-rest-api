@@ -6,10 +6,13 @@
         <div class="flex justify-start lg:w-0 lg:flex-1">
           <NuxtLink to="/">
             <span class="sr-only">Workflow</span>
-            <svg class="logo text-center" viewBox="0 0 128 128" width="30" height="30" data-v-5f26462c="">
-              <path fill="#42b883" d="M78.8,10L64,35.4L49.2,10H0l64,110l64-110C128,10,78.8,10,78.8,10z"
-                    data-v-5f26462c=""></path>
-              <path fill="#35495e" d="M78.8,10L64,35.4L49.2,10H25.6L64,76l38.4-66H78.8z" data-v-5f26462c=""></path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 124 124" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M55.7498 27.1551C52.5277 21.615 44.4723 21.6149 41.2502 27.1551L6.13404 87.5346C2.91191 93.0748 6.93956 100 13.3838 100H40.7975C38.0438 97.5934 37.0241 93.4303 39.1079 89.8584L65.7033 44.2694L55.7498 27.1551Z"
+                    fill="#80EEC0"/>
+              <path
+                  d="M78.0002 40.3997C80.6668 35.8668 87.3332 35.8668 89.9998 40.3997L119.061 89.801C121.728 94.3339 118.395 100 113.062 100H54.9383C49.6052 100 46.2719 94.3339 48.9385 89.801L78.0002 40.3997Z"
+                  fill="#00DC82"/>
             </svg>
           </NuxtLink>
         </div>
@@ -74,11 +77,14 @@
           <NuxtLink to="/"
                     class="text-base font-medium text-gray-500 hover:text-gray-900">Home
           </NuxtLink>
-          <NuxtLink to="/task"
-                    class="text-base font-medium text-gray-500 hover:text-gray-900">Task
-          </NuxtLink>
+
           <NuxtLink to="/tasks"
                     class="text-base font-medium text-gray-500 hover:text-gray-900">Tasks
+          </NuxtLink>
+
+          <NuxtLink to="/create"
+                    class="text-base font-medium text-gray-500 hover:text-gray-900">
+            + Create
           </NuxtLink>
 
           <NuxtLink to="/account"
@@ -112,11 +118,13 @@
             <div class="flex items-center justify-between">
               <div>
                 <NuxtLink to="/">
-                  <svg class="logo text-center" viewBox="0 0 128 128" width="30" height="30" data-v-5f26462c="">
-                    <path fill="#42b883" d="M78.8,10L64,35.4L49.2,10H0l64,110l64-110C128,10,78.8,10,78.8,10z"
-                          data-v-5f26462c=""></path>
-                    <path fill="#35495e" d="M78.8,10L64,35.4L49.2,10H25.6L64,76l38.4-66H78.8z"
-                          data-v-5f26462c=""></path>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 124 124" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M55.7498 27.1551C52.5277 21.615 44.4723 21.6149 41.2502 27.1551L6.13404 87.5346C2.91191 93.0748 6.93956 100 13.3838 100H40.7975C38.0438 97.5934 37.0241 93.4303 39.1079 89.8584L65.7033 44.2694L55.7498 27.1551Z"
+                          fill="#80EEC0"/>
+                    <path
+                        d="M78.0002 40.3997C80.6668 35.8668 87.3332 35.8668 89.9998 40.3997L119.061 89.801C121.728 94.3339 118.395 100 113.062 100H54.9383C49.6052 100 46.2719 94.3339 48.9385 89.801L78.0002 40.3997Z"
+                        fill="#00DC82"/>
                   </svg>
                 </NuxtLink>
               </div>
@@ -146,11 +154,11 @@
               <NuxtLink to="/" class="text-base font-medium text-gray-900 hover:text-gray-700">
                 Home
               </NuxtLink>
-              <NuxtLink to="/task" class="text-base font-medium text-gray-900 hover:text-gray-700">
-                Task
-              </NuxtLink>
               <NuxtLink to="/tasks" class="text-base font-medium text-gray-900 hover:text-gray-700">
                 Tasks
+              </NuxtLink>
+              <NuxtLink to="/create" class="text-base font-medium text-gray-900 hover:text-gray-700">
+                + Create
               </NuxtLink>
               <NuxtLink to="/account" class="text-base font-medium text-gray-900 hover:text-gray-700">
                 Account

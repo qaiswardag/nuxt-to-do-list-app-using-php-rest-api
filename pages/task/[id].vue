@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-20 px-20 text-center pb-60">
+  <div class="pt-20 sm:px-20 px-8 text-center pb-60 bg-gray-100 min-h-screen">
     <div v-if="error">
       <h2 class="text-xl font-bold pt-4 pb-6">{{ error }}</h2>
     </div>
@@ -11,10 +11,15 @@
 
     <div v-if="task"
          class="w-full inline-block relative group bg-white focus-within:ring-2 focus-within:ring-inset focus-within:ring-yellow-300 rounded-md py-16 px-8 h-full">
-      <h1 class="sm:text-4xl mb-12 font-semibold">
+      <h1 class="sm:text-4xl text-2xl mb-12 font-semibold">
         {{ task.title }}
       </h1>
       <div>
+        <button
+            :class="{'bg-green-600 text-white' :  task.completed === 'Y'}"
+            class="relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-yellow-200 mb-8">
+          {{ task.completed === 'Y' ? 'Done' : 'Undone' }}
+        </button>
         <p class="mt-2 text-sm text-gray-500">{{ task.description }}</p>
       </div>
     </div>

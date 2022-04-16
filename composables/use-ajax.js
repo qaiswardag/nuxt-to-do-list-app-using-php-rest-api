@@ -6,16 +6,25 @@ export const useAjax = function () {
     const controller = new AbortController();
     const signal = controller.signal;
     //
-    const timer = setTimeout(() => {
-        controller.abort();
-    }, 2000);
 
     const loadData = async function (url, data = {}, responseTime = 0) {
+        // timer
+        const timer = setTimeout(() => {
+            controller.abort();
+        }, 8000);
+
+
+        console.log('let see the data::::', data)
+
+
         const promise = usePromise(responseTime);
         try {
+            // is pending
             isPending.value = true;
             await promise;
             const response = await fetch(url, data);
+
+            // console.log('response isøøøøøøø::', response)
 
             if (signal.aborted) {
                 throw new Error('The loading time has been exceeded.');
@@ -29,17 +38,17 @@ export const useAjax = function () {
             // data
             data.value = await response.json();
 
-            isPending.value = false;
             clearTimeout(timer);
-
+            isPending.value = false;
+            // return
             return data.value;
+
         } catch (err) {
+            clearTimeout(timer);
             isPending.value = false;
             error.value = err.message;
             throw err;
-
         }
-
     };
 
     return {

@@ -2,10 +2,6 @@
   <div class="pt-20 sm:px-20 px-8 text-center pb-60 bg-gray-100 min-h-screen">
     <h1 class="sm:text-4xl mb-12 font-semibold">Page {{ currentPage }}</h1>
 
-    <div v-if="error">
-      <h2 class="text-xl font-bold pt-4 pb-6">{{ error }}</h2>
-    </div>
-
     <div v-if="isPending">
       <Spinner></Spinner>
     </div>
@@ -14,7 +10,7 @@
     <div v-if="tasks">
       <div v-if="!isPending">
 
-        <div style="min-height: 600px"
+        <div style="min-height: 650px"
              class="overflow-hidden divide-y divide-gray-200 sm:divide-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
           <div v-for="(task, taskIdx) in tasks.tasks" :key="task.id">
             <NuxtLink :to="'/task/' + task.id"
@@ -80,6 +76,7 @@
         @toggleModal="openModal = !openModal">
     </DynamicModal>
 
+
   </div>
 </template>
 
@@ -123,7 +120,7 @@ const loadTasks = async function (pageNumber) {
         optionsAmount: 2,
       },
       design: {
-        typeOfModal: 'warning',
+        typeOfModal: 'error',
         gridColumnAmount: 2,
       },
       content: {
