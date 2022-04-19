@@ -4,7 +4,7 @@
       <div
           class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
         <div class="flex justify-start lg:w-0 lg:flex-1">
-          <NuxtLink to="/">
+          <NuxtLink to="/tasks">
             <span class="sr-only">Workflow</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 124 124" fill="none">
               <path fill-rule="evenodd" clip-rule="evenodd"
@@ -73,11 +73,6 @@
             </transition>
           </Popover>
 
-
-          <NuxtLink to="/"
-                    class="text-base font-medium text-gray-500 hover:text-gray-900">Home
-          </NuxtLink>
-
           <NuxtLink to="/tasks"
                     class="text-base font-medium text-gray-500 hover:text-gray-900">Tasks
           </NuxtLink>
@@ -117,7 +112,7 @@
           <div class="pt-5 pb-6 px-5">
             <div class="flex items-center justify-between">
               <div>
-                <NuxtLink to="/">
+                <NuxtLink to="/tasks">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 124 124" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M55.7498 27.1551C52.5277 21.615 44.4723 21.6149 41.2502 27.1551L6.13404 87.5346C2.91191 93.0748 6.93956 100 13.3838 100H40.7975C38.0438 97.5934 37.0241 93.4303 39.1079 89.8584L65.7033 44.2694L55.7498 27.1551Z"
@@ -151,9 +146,6 @@
           </div>
           <div class="py-6 px-5 space-y-6">
             <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-              <NuxtLink to="/" class="text-base font-medium text-gray-900 hover:text-gray-700">
-                Home
-              </NuxtLink>
               <NuxtLink to="/tasks" class="text-base font-medium text-gray-900 hover:text-gray-700">
                 Tasks
               </NuxtLink>

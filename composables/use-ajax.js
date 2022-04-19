@@ -13,25 +13,22 @@ export const useAjax = function () {
             controller.abort();
         }, 8000);
 
-
-        console.log('let see the data::::', data)
-
-
         const promise = usePromise(responseTime);
         try {
             // is pending
             isPending.value = true;
             await promise;
+
+            // response
             const response = await fetch(url, data);
 
-            // console.log('response isøøøøøøø::', response)
-
+            // if loading time gets exceeded
             if (signal.aborted) {
                 throw new Error('The loading time has been exceeded.');
             }
 
-            // throw error if response is false
-            if (response.ok === false) {
+            // throw error if response is 404
+            if (response.status === 404) {
                 throw new Error(`${response.statusText}. Response code: ${response.status}`);
             }
 

@@ -10,17 +10,34 @@
 
 
     <div v-if="task"
-         class="w-full inline-block relative group bg-white focus-within:ring-2 focus-within:ring-inset focus-within:ring-yellow-300 rounded-md py-16 px-8 h-full">
+         class="w-full inline-block relative group bg-white rounded-md py-16 px-8 h-full">
       <h1 class="sm:text-4xl text-2xl mb-12 font-semibold">
         {{ task.title }}
       </h1>
       <div>
         <button
-            :class="{'bg-green-600 text-white' :  task.completed === 'Y'}"
-            class="relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-yellow-200 mb-8">
+            :class="{'border-green-500' :  task.completed === 'Y', 'border-yellow-400' : task.completed !== 'Y'}"
+            class="mb-4 text-sm text-gray-500 inline-block py-2 px-4 border-4">
           {{ task.completed === 'Y' ? 'Done' : 'Undone' }}
         </button>
+        <p class="my-y text-sm text-yellow-500">{{ task.deadline }}</p>
         <p class="mt-2 text-sm text-gray-500">{{ task.description }}</p>
+
+
+        <NuxtLink :to="'/update/' + task.id"
+                  class="inline-block items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-yellow-200 mt-12">
+          Update task
+        </NuxtLink>
+
+
+        <br>
+
+        <button @click="deleteTask" type="button"
+                class="inline-block mt-24 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+          Delete task
+        </button>
+
+
       </div>
     </div>
 
@@ -65,13 +82,8 @@ const task = ref(null)
 const {isPending, error, loadData} = useAjax();
 //
 //
-const route = useRoute()
-// onMounted(async () => {
-//   await productStore.loadProduct(parseInt(route.params.id));
-//
-//
-//
-//
+const router = useRoute()
+const router2 = useRouter()
 //
 //
 //
@@ -89,7 +101,7 @@ const loadTasks = async function (taskID) {
         optionsAmount: 2,
       },
       design: {
-        typeOfModal: 'warning',
+        typeOfModal: 'error',
         gridColumnAmount: 2,
       },
       content: {
@@ -137,7 +149,65 @@ const acceptModal = async function () {
 //
 // on mounted load tasks
 onMounted(() => {
-  loadTasks(route.params.id)
+  loadTasks(router.params.id)
 })
+//
+//
+//
+const deleteTask = async function (taskID) {
+
+  try {
+
+    const response = await loadData(`http://localhost/v1/tasks/${router.params.id}`, {
+
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }, 200,)
+
+    console.log('delete response is: ', response)
+
+
+    dynamicModal({
+      options: {
+        optionsAmount: 2,
+      },
+      design: {
+        typeOfModal: 'success',
+        gridColumnAmount: 1,
+      },
+      content: {
+        title: 'Task have been deleted',
+        cancelButtonText: 'Go to tasks',
+      }
+    });
+
+    // push to tasks
+    // router2.push('/tasks');
+  } catch (err) {
+    dynamicModal({
+      options: {
+        optionsAmount: 2,
+      },
+      design: {
+        typeOfModal: 'error',
+        gridColumnAmount: 2,
+      },
+      content: {
+        title: err.message,
+        cancelButtonText: 'Close',
+        acceptButtonText: 'Refresh Page',
+      }
+    });
+    console.log('unable to fetch:', err);
+  }
+
+
+}
+//
+//
+//
+//
 //
 </script>

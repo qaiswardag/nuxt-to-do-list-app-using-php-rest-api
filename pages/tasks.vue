@@ -110,7 +110,6 @@ const loadTasks = async function (pageNumber) {
   try {
     // try
     const data = await loadData(`http://localhost/v1/tasks/page/${pageNumber}`, {}, 200)
-    console.log('returned data from tasks.vue: ', data.data)
     tasks.value = await data.data;
     // catch
   } catch (err) {

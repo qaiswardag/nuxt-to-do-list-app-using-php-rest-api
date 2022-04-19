@@ -22,8 +22,8 @@ const useDynamicModal = function () {
                                            gridColumnAmount = 1,
                                        },
                                        content: {
-                                           title = 'Simple error message',
-                                           description = 'Something went wrong. Please try again.',
+                                           title = 'New message',
+                                           description = `Auto generated message. ${title}.`,
                                            cancelButtonText = 'Cancel',
                                            discardButtonText,
                                            acceptButtonText
