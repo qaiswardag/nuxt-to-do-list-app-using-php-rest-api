@@ -11,7 +11,7 @@ export const useAjax = function () {
         // timer
         const timer = setTimeout(() => {
             controller.abort();
-        }, 8000);
+        }, 400);
 
         const promise = usePromise(responseTime);
         try {

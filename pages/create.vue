@@ -55,18 +55,18 @@
     </div>
 
     <DynamicModal
-        :acceptButtonText="acceptButtonModal"
-        :cancelButtonText="cancelButtonModal"
-        :description="descriptionModal"
-        :discardButtonText="discardButtonModal"
-        :gridColumnAmount="gridColumnModal"
-        :open="openModal"
-        :optionsAmount="optionsModal"
-        :title="titleModal"
         :type="typeModal"
-        @acceptModal="acceptModal"
-        @cancelModal="cancelModal"
-        @discardModal="discardModal"
+        :optionsAmount="optionsModal"
+        :gridColumnAmount="gridColumnModal"
+        :title="titleModal"
+        :description="descriptionModal"
+        :firstButtonText="firstButtonModal"
+        :secondButtonText="secondButtonModal"
+        :thirdButtonText="thirdButtonModal"
+        :open="openModal"
+        @firstModalButtonFunction="firstModalButtonFunction"
+        @secondModalButtonFunction="secondModalButtonFunction"
+        @thirdModalButtonFunction="thirdModalButtonFunction"
         @toggleModal="openModal = !openModal">
     </DynamicModal>
 
@@ -99,9 +99,9 @@ const {
   gridColumnModal,
   titleModal,
   descriptionModal,
-  cancelButtonModal,
-  discardButtonModal,
-  acceptButtonModal,
+  firstButtonModal,
+  secondButtonModal,
+  thirdButtonModal,
 } = useDynamicModal();
 
 // router
@@ -151,7 +151,7 @@ const createTask = async function (taskObj) {
         description: `Title: ${taskData.data.tasks[0].title}
         Description: ${taskData.data.tasks[0].description ? taskData.data.tasks[0].description : 'Not added'}
         Deadline: ${taskData.data.tasks[0].deadline ? taskData.data.tasks[0].deadline : 'Not added'}`,
-        cancelButtonText: 'Go to task',
+        firstButtonText: 'Go to task',
       }
     });
 
@@ -169,8 +169,8 @@ const createTask = async function (taskObj) {
       },
       content: {
         title: err.message,
-        cancelButtonText: 'Close',
-        acceptButtonText: 'Refresh Page',
+        firstButtonText: 'Close',
+        thirdButtonText: 'Try again',
       }
     });
     console.log('unable to fetch:', err);
@@ -179,16 +179,18 @@ const createTask = async function (taskObj) {
 //
 //
 // cancel button clicked on modal
-const cancelModal = function () {
+const firstModalButtonFunction = function () {
+  console.log('first button was clicked')
   openModal.value = false;
   error.value = false;
 
   isPending.value = false;
-  // router.push('/tasks')
+  // router.push('/')
 };
 
 // cancel button clicked on modal
-const discardModal = async function () {
+const secondModalButtonFunction = async function () {
+  console.log('second button was clicked')
   openModal.value = false;
   error.value = false;
 // log user out
@@ -201,7 +203,8 @@ const discardModal = async function () {
 };
 
 // accept button clicked on modal
-const acceptModal = async function () {
+const thirdModalButtonFunction = async function () {
+  console.log('third button was clicked')
   openModal.value = false;
   error.value = false;
 //

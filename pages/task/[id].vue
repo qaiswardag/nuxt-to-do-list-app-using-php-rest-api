@@ -47,15 +47,16 @@
         :gridColumnAmount="gridColumnModal"
         :title="titleModal"
         :description="descriptionModal"
-        :cancelButtonText="cancelButtonModal"
-        :discardButtonText="discardButtonModal"
-        :acceptButtonText="acceptButtonModal"
+        :firstButtonText="firstButtonModal"
+        :secondButtonText="secondButtonModal"
+        :thirdButtonText="thirdButtonModal"
         :open="openModal"
-        @cancelModal="cancelModal"
-        @discardModal="discardModal"
-        @acceptModal="acceptModal"
+        @firstModalButtonFunction="firstModalButtonFunction"
+        @secondModalButtonFunction="secondModalButtonFunction"
+        @thirdModalButtonFunction="thirdModalButtonFunction"
         @toggleModal="openModal = !openModal">
     </DynamicModal>
+
 
   </div>
 </template>
@@ -72,9 +73,9 @@ const {
   gridColumnModal,
   titleModal,
   descriptionModal,
-  cancelButtonModal,
-  discardButtonModal,
-  acceptButtonModal,
+  firstButtonModal,
+  secondButtonModal,
+  thirdButtonModal,
 } = useDynamicModal();
 
 const task = ref(null)
@@ -106,8 +107,8 @@ const loadTasks = async function (taskID) {
       },
       content: {
         title: err.message,
-        cancelButtonText: 'Close',
-        acceptButtonText: 'Refresh Page',
+        firstButtonText: 'Close',
+        thirdButtonText: 'Refresh Page',
       }
     });
     console.log('unable to fetch:', err);
@@ -116,13 +117,15 @@ const loadTasks = async function (taskID) {
 //
 //
 // cancel button clicked on modal
-const cancelModal = function () {
+const firstModalButtonFunction = function () {
+  console.log('first button was clicked')
   openModal.value = false;
   error.value = false;
 };
 
 // cancel button clicked on modal
-const discardModal = async function () {
+const secondModalButtonFunction = async function () {
+  console.log('second button was clicked')
   openModal.value = false;
   error.value = false;
 // log user out
@@ -135,7 +138,8 @@ const discardModal = async function () {
 };
 
 // accept button clicked on modal
-const acceptModal = async function () {
+const thirdModalButtonFunction = async function () {
+  console.log('third button was clicked')
   openModal.value = false;
   error.value = false;
 //
@@ -179,7 +183,7 @@ const deleteTask = async function (taskID) {
       },
       content: {
         title: 'Task have been deleted',
-        cancelButtonText: 'Go to tasks',
+        firstButtonText: 'Go to tasks',
       }
     });
 
@@ -196,8 +200,8 @@ const deleteTask = async function (taskID) {
       },
       content: {
         title: err.message,
-        cancelButtonText: 'Close',
-        acceptButtonText: 'Refresh Page',
+        firstButtonText: 'Close',
+        thirdButtonText: 'Refresh Page',
       }
     });
     console.log('unable to fetch:', err);

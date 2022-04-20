@@ -1,7 +1,7 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <TransitionRoot :show="open" as="template">
-    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="cancelButton">
+    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="toggleModal">
       <div
           class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0"
@@ -54,31 +54,31 @@
                 :class="{'sm:grid-cols-1': gridColumnAmount === 1, 'sm:grid-cols-2': gridColumnAmount === 2, 'sm:grid-cols-3': gridColumnAmount === 3 }"
                 class="mt-5 sm:mt-6 sm:grid sm:gap-3 sm:grid-flow-row-dense">
 
-              <div v-if="cancelButtonText">
-                <button ref="cancelButtonRef"
+              <div v-if="firstButtonText">
+                <button ref="firstButtonRef"
                         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 sm:mt-0 sm:col-start-1 sm:text-sm"
                         type="button"
-                        @click="cancelButton">
-                  {{ cancelButtonText }}
+                        @click="firstButton">
+                  {{ firstButtonText }}
                 </button>
               </div>
 
-              <div v-if="discardButtonText">
+              <div v-if="secondButtonText">
                 <button
                     class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-100 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 sm:mt-0 sm:col-start-1 sm:text-sm"
                     type="button"
-                    @click="discardButton">
-                  {{ discardButtonText }}
+                    @click="secondButton">
+                  {{ secondButtonText }}
                 </button>
               </div>
 
-              <div v-if="acceptButtonText">
+              <div v-if="thirdButtonText">
                 <div v-if="type ==='success'">
                   <button
                       class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-700 text-base font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 sm:col-start-2 sm:text-sm"
                       type="button"
-                      @click="acceptButton">
-                    {{ acceptButtonText }}
+                      @click="thirdButton">
+                    {{ thirdButtonText }}
                   </button>
                 </div>
 
@@ -86,8 +86,8 @@
                   <button
                       class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-yellow-200 text-base font-medium text-gray-700 hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-200 sm:col-start-2 sm:text-sm"
                       type="button"
-                      @click="acceptButton">
-                    {{ acceptButtonText }}
+                      @click="thirdButton">
+                    {{ thirdButtonText }}
                   </button>
                 </div>
 
@@ -95,8 +95,8 @@
                   <button
                       class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-200 text-base font-medium text-gray-700 hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-200 sm:col-start-2 sm:text-sm"
                       type="button"
-                      @click="acceptButton">
-                    {{ acceptButtonText }}
+                      @click="thirdButton">
+                    {{ thirdButtonText }}
                   </button>
                 </div>
               </div>
@@ -152,14 +152,14 @@ export default {
       type: String,
       required: true,
     },
-    cancelButtonText: {
+    firstButtonText: {
       type: String,
       required: true,
     },
-    discardButtonText: {
+    secondButtonText: {
       type: String,
     },
-    acceptButtonText: {
+    thirdButtonText: {
       type: String,
     },
     open: {
@@ -172,18 +172,18 @@ export default {
     // const open = ref(true);
 
     // cancel function
-    const cancelButton = function () {
-      context.emit('cancelModal');
+    const firstButton = function () {
+      context.emit('firstModalButtonFunction');
     };
 
     // discard  function
-    const discardButton = function () {
-      context.emit('discardModal');
+    const secondButton = function () {
+      context.emit('secondModalButtonFunction');
     };
 
     // accept function
-    const acceptButton = function () {
-      context.emit('acceptModal');
+    const thirdButton = function () {
+      context.emit('thirdModalButtonFunction');
     };
 
     // open modal function
@@ -192,9 +192,9 @@ export default {
     };
     //
     return {
-      cancelButton,
-      discardButton,
-      acceptButton,
+      firstButton,
+      secondButton,
+      thirdButton,
       toggleModal
 
     };

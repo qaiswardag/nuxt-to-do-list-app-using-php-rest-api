@@ -4,7 +4,7 @@
       <div
           class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
         <div class="flex justify-start lg:w-0 lg:flex-1">
-          <NuxtLink to="/tasks">
+          <NuxtLink to="/">
             <span class="sr-only">Workflow</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 124 124" fill="none">
               <path fill-rule="evenodd" clip-rule="evenodd"
@@ -24,56 +24,7 @@
           </PopoverButton>
         </div>
         <PopoverGroup as="nav" class="hidden md:flex space-x-10">
-          <Popover v-slot="{ open }" class="relative">
-            <PopoverButton
-                :class="[open ? 'text-gray-900' : 'text-gray-500', 'group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300']">
-              <span>Solutions</span>
-              <ChevronDownIcon
-                  :class="[open ? 'text-gray-800' : 'text-gray-400', 'ml-2 h-5 w-5 group-hover:text-gray-500']"
-                  aria-hidden="true"/>
-            </PopoverButton>
-
-            <transition enter-active-class="transition ease-out duration-200"
-                        enter-from-class="opacity-0 translate-y-1"
-                        enter-to-class="opacity-100 translate-y-0"
-                        leave-active-class="transition ease-in duration-150"
-                        leave-from-class="opacity-100 translate-y-0"
-                        leave-to-class="opacity-0 translate-y-1">
-              <PopoverPanel
-                  class="absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
-                <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                  <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                    <a v-for="item in solutions" :key="item.name" :href="item.href"
-                       class="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
-                      <component :is="item.icon" aria-hidden="true"
-                                 class="flex-shrink-0 h-6 w-6 text-yellow-400"/>
-                      <div class="ml-4">
-                        <p class="text-base font-medium text-gray-900">
-                          {{ item.name }}
-                        </p>
-                        <p class="mt-1 text-sm text-gray-500">
-                          {{ item.description }}
-                        </p>
-                      </div>
-                    </a>
-                  </div>
-                  <div
-                      class="px-5 py-5 bg-gray-50 space-y-6 sm:flex sm:space-y-0 sm:space-x-10 sm:px-8">
-                    <div v-for="item in callsToAction" :key="item.name" class="flow-root">
-                      <a :href="item.href"
-                         class="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">
-                        <component :is="item.icon" aria-hidden="true"
-                                   class="flex-shrink-0 h-6 w-6 text-gray-400"/>
-                        <span class="ml-3">{{ item.name }}</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </PopoverPanel>
-            </transition>
-          </Popover>
-
-          <NuxtLink to="/tasks"
+          <NuxtLink to="/"
                     class="text-base font-medium text-gray-500 hover:text-gray-900">Tasks
           </NuxtLink>
 
@@ -87,6 +38,7 @@
           </NuxtLink>
 
         </PopoverGroup>
+
         <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
 
           <NuxtLink to="/login"
@@ -112,7 +64,7 @@
           <div class="pt-5 pb-6 px-5">
             <div class="flex items-center justify-between">
               <div>
-                <NuxtLink to="/tasks">
+                <NuxtLink to="/">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 124 124" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M55.7498 27.1551C52.5277 21.615 44.4723 21.6149 41.2502 27.1551L6.13404 87.5346C2.91191 93.0748 6.93956 100 13.3838 100H40.7975C38.0438 97.5934 37.0241 93.4303 39.1079 89.8584L65.7033 44.2694L55.7498 27.1551Z"
@@ -146,7 +98,7 @@
           </div>
           <div class="py-6 px-5 space-y-6">
             <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-              <NuxtLink to="/tasks" class="text-base font-medium text-gray-900 hover:text-gray-700">
+              <NuxtLink to="/" class="text-base font-medium text-gray-900 hover:text-gray-700">
                 Tasks
               </NuxtLink>
               <NuxtLink to="/create" class="text-base font-medium text-gray-900 hover:text-gray-700">
@@ -197,50 +149,6 @@ import {
 } from '@heroicons/vue/outline';
 import {ChevronDownIcon} from '@heroicons/vue/solid';
 
-const solutions = [
-  {
-    name: 'Analytics',
-    description: 'Get a better understanding of where your traffic is coming from.',
-    href: '#',
-    icon: ChartBarIcon,
-  },
-  {
-    name: 'Help Center',
-    description: 'Get all of your questions answered in our forums or contact support.',
-    href: '#',
-    icon: SupportIcon,
-  },
-  {
-    name: 'Security',
-    description: 'Your customers\' data will be safe and secure.',
-    href: '#',
-    icon: ShieldCheckIcon
-  },
-  {
-    name: 'Integrations',
-    description: 'Connect with third-party tools that you\'re already using.',
-    href: '#',
-    icon: ViewGridIcon,
-  },
-  {
-    name: 'Automations',
-    description: 'Build strategic funnels that will drive your customers to convert',
-    href: '#',
-    icon: RefreshIcon,
-  },
-];
-const callsToAction = [
-  {
-    name: 'Watch Demo',
-    href: '#',
-    icon: PlayIcon
-  },
-  {
-    name: 'Contact Sales',
-    href: '#',
-    icon: PhoneIcon
-  },
-];
 
 export default {
   components: {
@@ -253,10 +161,7 @@ export default {
     XIcon,
   },
   setup() {
-    return {
-      solutions,
-      callsToAction,
-    };
+    return {};
   },
 };
 </script>

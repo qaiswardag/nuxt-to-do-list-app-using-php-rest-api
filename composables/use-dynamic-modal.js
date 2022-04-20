@@ -7,9 +7,9 @@ const optionsModal = ref(Number(1));
 const gridColumnModal = ref(Number(1));
 const titleModal = ref('');
 const descriptionModal = ref('');
-const cancelButtonModal = ref('');
-const discardButtonModal = ref(null);
-const acceptButtonModal = ref(null);
+const firstButtonModal = ref('');
+const secondButtonModal = ref(null);
+const thirdButtonModal = ref(null);
 
 const useDynamicModal = function () {
 
@@ -24,9 +24,9 @@ const useDynamicModal = function () {
                                        content: {
                                            title = 'New message',
                                            description = `Auto generated message. ${title}.`,
-                                           cancelButtonText = 'Cancel',
-                                           discardButtonText,
-                                           acceptButtonText
+                                           firstButtonText = 'Close',
+                                           secondButtonText,
+                                           thirdButtonText
                                        }
                                    }) {
         // open modal set to true
@@ -37,9 +37,9 @@ const useDynamicModal = function () {
         typeModal.value = typeOfModal;
         titleModal.value = title;
         descriptionModal.value = description;
-        cancelButtonModal.value = cancelButtonText;
-        discardButtonModal.value = discardButtonText;
-        acceptButtonModal.value = acceptButtonText;
+        firstButtonModal.value = firstButtonText;
+        secondButtonModal.value = secondButtonText;
+        thirdButtonModal.value = thirdButtonText;
     };
 
     return {
@@ -51,9 +51,9 @@ const useDynamicModal = function () {
         gridColumnModal,
         titleModal,
         descriptionModal,
-        cancelButtonModal,
-        discardButtonModal,
-        acceptButtonModal,
+        firstButtonModal,
+        secondButtonModal,
+        thirdButtonModal,
     };
 };
 

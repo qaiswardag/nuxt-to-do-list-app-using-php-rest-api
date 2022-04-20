@@ -44,7 +44,7 @@
                   </button>
                   <button type="submit"
                           class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-800 bg-yellow-200 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300">
-                    Create
+                    Update
                   </button>
                 </div>
               </form>
@@ -56,18 +56,18 @@
     </div>
 
     <DynamicModal
-        :acceptButtonText="acceptButtonModal"
-        :cancelButtonText="cancelButtonModal"
-        :description="descriptionModal"
-        :discardButtonText="discardButtonModal"
-        :gridColumnAmount="gridColumnModal"
-        :open="openModal"
-        :optionsAmount="optionsModal"
-        :title="titleModal"
         :type="typeModal"
-        @acceptModal="acceptModal"
-        @cancelModal="cancelModal"
-        @discardModal="discardModal"
+        :optionsAmount="optionsModal"
+        :gridColumnAmount="gridColumnModal"
+        :title="titleModal"
+        :description="descriptionModal"
+        :firstButtonText="firstButtonModal"
+        :secondButtonText="secondButtonModal"
+        :thirdButtonText="thirdButtonModal"
+        :open="openModal"
+        @firstModalButtonFunction="firstModalButtonFunction"
+        @secondModalButtonFunction="secondModalButtonFunction"
+        @thirdModalButtonFunction="thirdModalButtonFunction"
         @toggleModal="openModal = !openModal">
     </DynamicModal>
 
@@ -100,10 +100,15 @@ const {
   gridColumnModal,
   titleModal,
   descriptionModal,
-  cancelButtonModal,
-  discardButtonModal,
-  acceptButtonModal,
+  firstButtonModal,
+  secondButtonModal,
+  thirdButtonModal,
 } = useDynamicModal();
+
+
+onMounted(() => {
+  console.log('test::::', firstButtonModal.value)
+})
 
 // router
 const router = useRoute();
@@ -131,13 +136,13 @@ const loadTasks = async function (taskID) {
         optionsAmount: 2,
       },
       design: {
-        typeOfModal: 'warning',
+        typeOfModal: 'error',
         gridColumnAmount: 2,
       },
       content: {
         title: err.message,
-        cancelButtonText: 'Close',
-        acceptButtonText: 'Refresh Page',
+        firstButtonText: 'Close',
+        thirdButtonText: 'Refresh Page',
       }
     });
     console.log('unable to fetch:', err);
@@ -164,7 +169,8 @@ onMounted(() => {
 //
 //
 // async function
-const createTask = async function (taskObj) {
+const updateTask = async function (taskObj) {
+
   try {
     // try
     const taskData = await loadData(`http://localhost/v1/tasks/${router.params.id}`, {
@@ -174,6 +180,7 @@ const createTask = async function (taskObj) {
         'Content-Type': 'application/json'
       },
     }, 0,)
+
 
     // handle error in returned data
     if (taskData.statusCode === 400) {
@@ -202,7 +209,7 @@ const createTask = async function (taskObj) {
         description: `Title: ${taskData.data.tasks[0].title}
         Description: ${taskData.data.tasks[0].description ? taskData.data.tasks[0].description : 'Not added'}
         Deadline: ${taskData.data.tasks[0].deadline ? taskData.data.tasks[0].deadline : 'Not added'}`,
-        cancelButtonText: 'Go to task',
+        firstButtonText: 'Go to task',
       }
     });
 
@@ -220,8 +227,8 @@ const createTask = async function (taskObj) {
       },
       content: {
         title: err.message,
-        cancelButtonText: 'Close',
-        acceptButtonText: 'Refresh Page',
+        firstButtonText: 'Close',
+        thirdButtonText: 'Refresh Page',
       }
     });
     console.log('unable to fetch:', err);
@@ -230,7 +237,8 @@ const createTask = async function (taskObj) {
 //
 //
 // cancel button clicked on modal
-const cancelModal = function () {
+const firstModalButtonFunction = function () {
+  console.log('first button was clicked')
   openModal.value = false;
   error.value = false;
 
@@ -239,7 +247,8 @@ const cancelModal = function () {
 };
 
 // cancel button clicked on modal
-const discardModal = async function () {
+const secondModalButtonFunction = async function () {
+  console.log('second button was clicked')
   openModal.value = false;
   error.value = false;
 // log user out
@@ -252,7 +261,8 @@ const discardModal = async function () {
 };
 
 // accept button clicked on modal
-const acceptModal = async function () {
+const thirdModalButtonFunction = async function () {
+  console.log('third button was clicked')
   openModal.value = false;
   error.value = false;
 //
@@ -309,7 +319,7 @@ const submitForm = async function (event) {
   }
 
   // create task
-  createTask(taskObj)
+  updateTask(taskObj)
 
 
 }
