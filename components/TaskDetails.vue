@@ -1,10 +1,5 @@
 <template>
   <div>
-    <button
-        :class="{'border-green-500' :  task.completed === 'Y', 'border-yellow-400' : task.completed !== 'Y'}"
-        class="mb-4 text-sm text-gray-500 inline-block py-2 px-4 border-4">
-      {{ task.completed === 'Y' ? 'Done' : 'Undone' }}
-    </button>
     <h1 style="min-height: 60px" class="sm:text-2xl text-2xl mb-4 font-semibold">
       {{ task.title }}
     </h1>

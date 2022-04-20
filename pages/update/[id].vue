@@ -105,11 +105,6 @@ const {
   thirdButtonModal,
 } = useDynamicModal();
 
-
-onMounted(() => {
-  console.log('test::::', firstButtonModal.value)
-})
-
 // router
 const router = useRoute();
 // tasks
@@ -170,7 +165,6 @@ onMounted(() => {
 //
 // async function
 const updateTask = async function (taskObj) {
-
   try {
     // try
     const taskData = await loadData(`http://localhost/v1/tasks/${router.params.id}`, {

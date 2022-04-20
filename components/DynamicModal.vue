@@ -154,7 +154,6 @@ export default {
     },
     firstButtonText: {
       type: String,
-      required: true,
     },
     secondButtonText: {
       type: String,
