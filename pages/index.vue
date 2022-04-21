@@ -37,16 +37,16 @@
       </span>
     </span>
               </Switch>
-              <button @click="deleteTask(task.id)"
-                      type="button"
-                      class="inline-flex items-center p-0.5 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600">
-                <TrashIcon class="h-4 w-4" aria-hidden="true"/>
-              </button>
               <NuxtLink :to="'/update/' + task.id"
                         type="button"
                         class="inline-flex items-center p-0.5 border border-transparent rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600">
                 <PencilIcon class="h-4 w-4" aria-hidden="true"/>
               </NuxtLink>
+              <button @click="deleteTask(task.id)"
+                      type="button"
+                      class="inline-flex items-center p-0.5 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600">
+                <TrashIcon class="h-4 w-4" aria-hidden="true"/>
+              </button>
             </div>
 
 
