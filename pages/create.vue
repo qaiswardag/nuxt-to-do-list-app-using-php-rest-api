@@ -76,20 +76,14 @@
 
 
 <script setup>
-
-
 import {ref} from "vue";
 // import {useRouter} from 'vue-router'
-
 const titleTask = ref(null);
 const descriptionTask = ref(null);
 const deadlineTask = ref(null);
 
-
 //
-//
-//
-//
+// use dynamic modal
 const {
   dynamicModal,
   openModal,
@@ -103,6 +97,10 @@ const {
   secondButtonModal,
   thirdButtonModal,
 } = useDynamicModal();
+// set modal handle functions
+const firstModalButtonFunction = ref(null);
+const secondModalButtonFunction = ref(null);
+const thirdModalButtonFunction = ref(null);
 
 // router
 const router = useRouter();
@@ -114,8 +112,8 @@ const {isPending, error, loadData} = useAjax();
 //
 // async function
 const createTask = async function (taskObj) {
+  // try
   try {
-    // try
     const taskData = await loadData('http://localhost/v1/tasks', {
       method: 'POST',
       body: JSON.stringify(taskObj),
@@ -137,25 +135,9 @@ const createTask = async function (taskObj) {
       throw new Error(messageError.toString());
     }
 
-
-    dynamicModal({
-      options: {
-        optionsAmount: 1,
-      },
-      design: {
-        typeOfModal: 'success',
-        gridColumnAmount: 1,
-      },
-      content: {
-        title: 'New task have been created',
-        description: `Title: ${taskData.data.tasks[0].title}
-        Description: ${taskData.data.tasks[0].description ? taskData.data.tasks[0].description : 'Not added'}
-        Deadline: ${taskData.data.tasks[0].deadline ? taskData.data.tasks[0].deadline : 'Not added'}`,
-        firstButtonText: 'Go to task',
-      }
-    });
-
-
+    // push to tasks
+    router.push('/');
+    //
     // catch
   } catch (err) {
 
@@ -170,53 +152,26 @@ const createTask = async function (taskObj) {
       content: {
         title: err.message,
         firstButtonText: 'Close',
-        thirdButtonText: 'Try again',
+        thirdButtonText: 'Reload Page',
       }
     });
+
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      error.value = false;
+      openModal.value = false;
+    }
+    // handle modal click
+    thirdModalButtonFunction.value = function () {
+      error.value = false;
+      openModal.value = false;
+      location.reload(true);
+    }
+
+    // log erros
     console.log('unable to fetch:', err);
   }
 }
-//
-//
-// cancel button clicked on modal
-const firstModalButtonFunction = function () {
-  console.log('first button was clicked')
-  openModal.value = false;
-  error.value = false;
-
-  isPending.value = false;
-  // router.push('/')
-};
-
-// cancel button clicked on modal
-const secondModalButtonFunction = async function () {
-  console.log('second button was clicked')
-  openModal.value = false;
-  error.value = false;
-// log user out
-// log user out
-// log user out
-  isPending.value = true;
-  await usePromise(200);
-  isPending.value = false;
-  //
-};
-
-// accept button clicked on modal
-const thirdModalButtonFunction = async function () {
-  console.log('third button was clicked')
-  openModal.value = false;
-  error.value = false;
-//
-//
-  isPending.value = true;
-  await usePromise(200);
-  isPending.value = false;
-//
-};
-//
-//
-//
 //
 //
 //
@@ -259,11 +214,8 @@ const submitForm = async function (event) {
     deadline: taskDatelineStr,
     completed: 'N',
   }
-
   // create task
   createTask(taskObj)
-
-
 }
 
 </script>

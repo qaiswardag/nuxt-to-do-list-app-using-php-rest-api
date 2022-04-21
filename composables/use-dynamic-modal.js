@@ -23,7 +23,7 @@ const useDynamicModal = function () {
                                        },
                                        content: {
                                            title = 'New message',
-                                           description = `Auto generated message. ${title}.`,
+                                           description = `Auto generated message. ${title}`,
                                            firstButtonText = 'Close',
                                            secondButtonText,
                                            thirdButtonText

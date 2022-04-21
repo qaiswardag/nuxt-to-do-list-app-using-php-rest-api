@@ -9,10 +9,9 @@
     <div v-if="tasks">
       <div v-if="!isPending">
         <div
-            class="sm:grid sm:grid-cols-2 sm:gap-6">
+            class="sm:grid sm:grid-cols-2 sm:gap-6 grid grid-cols-1 gap-8">
           <div v-for="(task, taskIdx) in tasks" :key="task.id"
-               class="grid-cols-1 border border-gray-50 p-4 rounded-md bg-yellow-50">
-
+               class="grid-cols-1 border border-gray-50 p-4 rounded-md bg-yellow-50 gap-4">
             <div class="flex justify-center items-center gap-2 pb-4">
               <Switch v-model="task.completed"
                       @click="toggleCompleted(task.id, task.completed)"
@@ -43,13 +42,18 @@
                       class="inline-flex items-center p-0.5 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600">
                 <TrashIcon class="h-4 w-4" aria-hidden="true"/>
               </button>
+              <NuxtLink :to="'/update/' + task.id"
+                        type="button"
+                        class="inline-flex items-center p-0.5 border border-transparent rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600">
+                <PencilIcon class="h-4 w-4" aria-hidden="true"/>
+              </NuxtLink>
             </div>
 
 
-            <NuxtLink style="min-height: 350px" :to="'/task/' + task.id"
-                      class="w-full inline-block  group focus-within:ring-2 focus-within:ring-inset focus-within:ring-yellow-300 rounded-md py-16 px-8 bg-white">
+            <div
+                class="w-full inline-block  group focus-within:ring-2 focus-within:ring-inset focus-within:ring-yellow-300 rounded-md py-16 px-8 bg-white">
               <TaskDetails :task="task"></TaskDetails>
-            </NuxtLink>
+            </div>
           </div>
 
 
@@ -58,45 +62,47 @@
     </div>
 
 
-    <div v-if="tasksData">
-      <nav aria-label="Pagination"
-           class="bg-white px-4 py-3 flex items-center justify-between sm:px-6 mt-4 rounded-md">
-        <div class="hidden sm:block">
-          <p class="text-gray-800">
-            Showing
-            {{ ' ' }}
-            <span
-                class="font-medium">{{
-                (tasksData.data.rows_returned * currentPage) - tasksData.data.rows_returned + 1
-              }}</span>
-            {{ ' ' }}
-            to
-            {{ ' ' }}
-            <span class="font-medium">{{ tasksData.data.rows_returned * currentPage }}</span>
-            {{ ' ' }}
-            of
-            {{ ' ' }}
-            <span class="font-medium">{{ tasksData.data.total_rows }}</span>
-            {{ ' ' }}
-            results
-          </p>
-        </div>
-        <div class="flex-1 flex justify-between sm:justify-end gap-2">
-          <button :class="{'opacity-20 cursor-not-allowed': !tasksData.data.has_previous_page}"
-                  class="relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-yellow-200 hover:bg-yellow-300"
-                  href="#"
-                  @click="loadTasks(currentPage = currentPage - 1)">
-            Previous
-          </button>
+    <div v-if="tasks">
+      <div v-if="!isPending">
+        <nav aria-label="Pagination"
+             class="bg-white px-4 py-3 flex items-center justify-between sm:px-6 mt-4 rounded-md">
+          <div class="hidden sm:block">
+            <p class="text-gray-800">
+              Showing
+              {{ ' ' }}
+              <span
+                  class="font-medium">{{
+                  (pagesRowsDataFromApi.rowsReturned * currentPage) - pagesRowsDataFromApi.rowsReturned + 1
+                }}</span>
+              {{ ' ' }}
+              to
+              {{ ' ' }}
+              <span class="font-medium">{{ pagesRowsDataFromApi.rowsReturned * currentPage }}</span>
+              {{ ' ' }}
+              of
+              {{ ' ' }}
+              <span class="font-medium">{{ pagesRowsDataFromApi.totalRows }}</span>
+              {{ ' ' }}
+              results
+            </p>
+          </div>
+          <div class="flex-1 flex justify-between sm:justify-end gap-2">
+            <button :class="{'opacity-20 cursor-not-allowed': !pagesRowsDataFromApi.hasPreviousPage}"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-yellow-200 hover:bg-yellow-300"
+                    href="#"
+                    @click="loadTasks(currentPage = currentPage - 1)">
+              Previous
+            </button>
 
-          <button :class="{'opacity-20 cursor-not-allowed': !tasksData.data.has_next_page}"
-                  class="relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-yellow-200 hover:bg-yellow-300"
-                  href="#"
-                  @click="loadTasks(currentPage = currentPage + 1)">
-            Next
-          </button>
-        </div>
-      </nav>
+            <button :class="{'opacity-20 cursor-not-allowed': !pagesRowsDataFromApi.hasNextPage}"
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-yellow-200 hover:bg-yellow-300"
+                    href="#"
+                    @click="loadTasks(currentPage = currentPage + 1)">
+              Next
+            </button>
+          </div>
+        </nav>
+      </div>
     </div>
 
     <DynamicModal
@@ -122,13 +128,15 @@
 <script setup>
 import {onMounted} from 'vue'
 import {Switch} from '@headlessui/vue'
-import {TrashIcon} from '@heroicons/vue/solid'
+import {TrashIcon, PencilIcon} from '@heroicons/vue/solid'
 
-
+// use router
+const router = useRouter();
+// use dynamic model
 const {
   dynamicModal,
   openModal,
-  //
+  //s
   typeModal,
   optionsModal,
   gridColumnModal,
@@ -144,8 +152,11 @@ const secondModalButtonFunction = ref(null);
 const thirdModalButtonFunction = ref(null);
 
 // tasks
-const tasksData = ref()
 const tasks = ref([])
+// tasks object for collecting relevant data from api and renamming
+const tasksObj = ref({});
+// page, row, page etc. for each call
+const pagesRowsDataFromApi = ref({})
 // completed
 // import ajax
 const {isPending, error, loadData} = useAjax();
@@ -156,45 +167,60 @@ const currentPage = ref(1);
 //
 // async function
 const loadTasks = async function (pageNumber) {
-  const taskObj = ref({});
+  // set tasks object to empty on each load
+  tasksObj.value = {};
+  // set tasks array to empty on each load
+  tasks.value = [];
   try {
     // try
-    const data = await loadData(`http://localhost/v1/tasks/page/${pageNumber}`, {}, 200)
-    tasksData.value = data;
+    const data = await loadData(`http://localhost/v1/tasks/page/${pageNumber}`, {}, 0)
+    //
     //
     data.data.tasks.forEach((task) => {
       //
-      taskObj.value = {
+      tasksObj.value = {
         id: task.id,
         title: task.title,
         description: task.description,
         deadline: task.deadline,
         completed: task.completed === 'Y' ? true : false,
       }
-
       // update tasks
-      tasks.value.push(taskObj.value);
+      tasks.value.push(tasksObj.value);
     })
+    // pages rows amount related data from api
+    pagesRowsDataFromApi.value = {
+      hasNextPage: data.data.has_next_page,
+      hasPreviousPage: data.data.has_previous_page,
+      rowsReturned: data.data.rows_returned,
+      totalPages: data.data.total_pages,
+      totalRows: data.data.total_rows
+    }
+    //
     //
     // catch
   } catch (err) {
-
+    // modal for error handling
     dynamicModal({
       options: {
-        optionsAmount: 2,
+        optionsAmount: 1,
       },
       design: {
         typeOfModal: 'error',
-        gridColumnAmount: 2,
+        gridColumnAmount: 1,
       },
       content: {
         title: err.message,
-        firstButtonText: 'Close',
-        thirdButtonText: 'Refresh Page',
+        firstButtonText: 'Reload Page',
       }
     });
-
-
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      error.value = false;
+      openModal.value = false;
+      location.reload(true);
+    }
+    // log erros
     console.log('unable to fetch:', err);
   }
 }
@@ -202,8 +228,8 @@ const loadTasks = async function (pageNumber) {
 //
 //
 const toggleCompleted = async function (id, completedTask) {
-  // task object
-  const taskObj = ref({});
+  // set tasks object to empty on each load
+  tasksObj.value = {};
   //
   // update task completed
   try {
@@ -214,7 +240,7 @@ const toggleCompleted = async function (id, completedTask) {
       headers: {
         'Content-Type': 'application/json'
       },
-    }, 200,)
+    }, 0,)
 
 
     // handle error in returned data
@@ -231,10 +257,10 @@ const toggleCompleted = async function (id, completedTask) {
       throw new Error(messageError.toString());
     }
 
-
+    // data
     data.data.tasks.forEach((task) => {
       //
-      taskObj.value = {
+      tasksObj.value = {
         id: task.id,
         title: task.title,
         description: task.description,
@@ -243,106 +269,102 @@ const toggleCompleted = async function (id, completedTask) {
       }
 
       // update tasks
-      tasks.value.push(taskObj.value);
+      tasks.value = tasks.value.filter(task => {
+        return task.id !== tasksObj.id;
+      })
     })
 
 
     // catch
   } catch (err) {
-
+    console.log('er:::::', err)
+    // error messages
     dynamicModal({
       options: {
-        optionsAmount: 2,
+        optionsAmount: 1,
       },
       design: {
         typeOfModal: 'error',
-        gridColumnAmount: 2,
-      },
-      content: {
-        title: err.message,
-        firstButtonText: 'Close',
-        thirdButtonText: 'Refresh Page',
-      }
-    });
-    //
-    // // handle modal click
-    firstModalButtonFunction.value = function () {
-      error.value = false;
-      openModal.value = false;
-    }
-    // // handle modal click
-    thirdModalButtonFunction.value = function () {
-      error.value = false;
-      openModal.value = false;
-    }
-    console.log('unable to fetch:', err);
-  }
-}
-
-//
-//
-const deleteTask = async function (id) {
-
-  console.log('task id is: ', id)
-
-  try {
-
-    // const response = await loadData(`http://localhost/v1/tasks/${id}`, {
-    //
-    //   method: 'DELETE',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    // }, 200,)
-    //
-    // console.log('delete response is: ', response);
-    //
-
-    dynamicModal({
-      options: {
-        optionsAmount: 2,
-      },
-      design: {
-        typeOfModal: 'success',
         gridColumnAmount: 1,
       },
       content: {
-        title: 'Task have been deleted',
-        firstButtonText: 'Close',
+        title: err.message,
+        firstButtonText: 'Refresh Page',
       }
     });
-
-    // update tasks
-    let min = tasks.value.filter(task => {
-      console.log('the task is:', task)
-      return task.id === id
-    })
-    console.log('min: ', min)
-
-    // // handle modal click
+    //
+    // handle modal click
     firstModalButtonFunction.value = function () {
       error.value = false;
       openModal.value = false;
+      location.reload();
     }
-  } catch (err) {
-    dynamicModal({
-      options: {
-        optionsAmount: 2,
-      },
-      design: {
-        typeOfModal: 'error',
-        gridColumnAmount: 2,
-      },
-      content: {
-        title: err.message,
-        firstButtonText: 'Close',
-        thirdButtonText: 'Refresh Page',
-      }
-    });
     console.log('unable to fetch:', err);
   }
 }
+
 //
+//
+const deleteTask = function (id) {
+  // accept deletion of task modal
+  dynamicModal({
+    options: {
+      optionsAmount: 2,
+    },
+    design: {
+      typeOfModal: 'warning',
+      gridColumnAmount: 2,
+    },
+    content: {
+      title: 'Are you sure you want to delete this task?',
+      firstButtonText: 'Close',
+      thirdButtonText: 'Delete task',
+    }
+  });
+  // handle modal click button
+  firstModalButtonFunction.value = function () {
+    openModal.value = false;
+    return;
+  }
+
+  // handle modal click button for deletion
+  thirdModalButtonFunction.value = async function () {
+    openModal.value = false;
+
+    // try delete task
+    try {
+      const response = await loadData(`http://localhost/v1/tasks/${id}`, {
+
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      }, 0,)
+
+      // update tasks array
+      tasks.value = tasks.value.filter(task => {
+        return task.id !== id;
+      })
+      //  catch
+    } catch (err) {
+      dynamicModal({
+        options: {
+          optionsAmount: 2,
+        },
+        design: {
+          typeOfModal: 'error',
+          gridColumnAmount: 2,
+        },
+        content: {
+          title: err.message,
+          firstButtonText: 'Close',
+          thirdButtonText: 'Refresh Page',
+        }
+      });
+      console.log('unable to fetch:', err);
+    }
+  }
+}
 //
 //
 // on mounted load tasks

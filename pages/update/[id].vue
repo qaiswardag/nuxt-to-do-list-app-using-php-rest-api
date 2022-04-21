@@ -77,24 +77,24 @@
 
 
 <script setup>
-
-
-import {ref} from "vue";
 import {onMounted} from "vue";
 
+
+// variables
 const titleTask = ref(null);
 const descriptionTask = ref(null);
 const deadlineTask = ref(null);
 
 
-//
-//
-//
-//
+// use router
+const route = useRoute();
+const router = useRouter();
+
+// use dynamic model
 const {
   dynamicModal,
   openModal,
-  //
+  //s
   typeModal,
   optionsModal,
   gridColumnModal,
@@ -104,9 +104,11 @@ const {
   secondButtonModal,
   thirdButtonModal,
 } = useDynamicModal();
+// set modal handle functions
+const firstModalButtonFunction = ref(null);
+const secondModalButtonFunction = ref(null);
+const thirdModalButtonFunction = ref(null);
 
-// router
-const router = useRoute();
 // tasks
 // import ajax
 const {isPending, error, loadData} = useAjax();
@@ -121,7 +123,7 @@ const task = ref(null)
 const loadTasks = async function (taskID) {
   try {
     // try
-    const data = await loadData(`http://localhost/v1/tasks/${taskID}`, {}, 300)
+    const data = await loadData(`http://localhost/v1/tasks/${taskID}`, {}, 0)
     task.value = data.data.tasks[0];
     // catch
   } catch (err) {
@@ -146,28 +148,15 @@ const loadTasks = async function (taskID) {
 //
 // on mounted load tasks
 onMounted(() => {
-  loadTasks(router.params.id)
+  loadTasks(route.params.id)
 })
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 // async function
 const updateTask = async function (taskObj) {
   try {
     // try
-    const taskData = await loadData(`http://localhost/v1/tasks/${router.params.id}`, {
+    const taskData = await loadData(`http://localhost/v1/tasks/${route.params.id}`, {
       method: 'PATCH',
       body: JSON.stringify(taskObj),
       headers: {
@@ -189,28 +178,13 @@ const updateTask = async function (taskObj) {
       throw new Error(messageError.toString());
     }
 
-
-    dynamicModal({
-      options: {
-        optionsAmount: 1,
-      },
-      design: {
-        typeOfModal: 'success',
-        gridColumnAmount: 1,
-      },
-      content: {
-        title: 'Task have been updated',
-        description: `Title: ${taskData.data.tasks[0].title}
-        Description: ${taskData.data.tasks[0].description ? taskData.data.tasks[0].description : 'Not added'}
-        Deadline: ${taskData.data.tasks[0].deadline ? taskData.data.tasks[0].deadline : 'Not added'}`,
-        firstButtonText: 'Go to task',
-      }
-    });
+    // router push
+    router.push('/')
 
 
     // catch
   } catch (err) {
-
+    // handle errors with modal
     dynamicModal({
       options: {
         optionsAmount: 2,
@@ -222,56 +196,28 @@ const updateTask = async function (taskObj) {
       content: {
         title: err.message,
         firstButtonText: 'Close',
-        thirdButtonText: 'Refresh Page',
+        thirdButtonText: 'Reload Page',
       }
     });
+
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      error.value = false;
+      openModal.value = false;
+    }
+    // handle modal click
+    thirdModalButtonFunction.value = function () {
+      error.value = false;
+      openModal.value = false;
+      location.reload(true);
+    }
     console.log('unable to fetch:', err);
   }
 }
 //
 //
-// cancel button clicked on modal
-const firstModalButtonFunction = function () {
-  console.log('first button was clicked')
-  openModal.value = false;
-  error.value = false;
-
-  isPending.value = false;
-  // router.push('/tasks')
-};
-
-// cancel button clicked on modal
-const secondModalButtonFunction = async function () {
-  console.log('second button was clicked')
-  openModal.value = false;
-  error.value = false;
-// log user out
-// log user out
-// log user out
-  isPending.value = true;
-  await usePromise(200);
-  isPending.value = false;
-  //
-};
-
-// accept button clicked on modal
-const thirdModalButtonFunction = async function () {
-  console.log('third button was clicked')
-  openModal.value = false;
-  error.value = false;
 //
-//
-  isPending.value = true;
-  await usePromise(200);
-  isPending.value = false;
-//
-};
-//
-//
-//
-//
-//
-//
+// submit form
 const submitForm = async function (event) {
   // date function
   const taskDeadline = new Date(deadlineTask.value);
@@ -314,8 +260,6 @@ const submitForm = async function (event) {
 
   // create task
   updateTask(taskObj)
-
-
 }
 
 </script>

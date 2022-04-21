@@ -7,11 +7,11 @@ export const useAjax = function () {
     const signal = controller.signal;
     //
 
-    const loadData = async function (url, data = {}, responseTime = 0) {
+    const loadData = async function (url, data = {}, responseTime = 300) {
         // timer
         const timer = setTimeout(() => {
             controller.abort();
-        }, 400);
+        }, 2000);
 
         const promise = usePromise(responseTime);
         try {

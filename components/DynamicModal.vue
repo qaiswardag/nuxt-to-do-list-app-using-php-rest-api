@@ -52,7 +52,7 @@
 
             <div
                 :class="{'sm:grid-cols-1': gridColumnAmount === 1, 'sm:grid-cols-2': gridColumnAmount === 2, 'sm:grid-cols-3': gridColumnAmount === 3 }"
-                class="mt-5 sm:mt-6 sm:grid sm:gap-3 sm:grid-flow-row-dense">
+                class="mt-5 sm:mt-6 sm:grid sm:gap-3 sm:grid-flow-row-dense grid gap-4">
 
               <div v-if="firstButtonText">
                 <button ref="firstButtonRef"
@@ -65,7 +65,7 @@
 
               <div v-if="secondButtonText">
                 <button
-                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-100 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 sm:mt-0 sm:col-start-1 sm:text-sm"
+                    class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-100 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 sm:mt-0 sm:col-start-1 sm:text-sm"
                     type="button"
                     @click="secondButton">
                   {{ secondButtonText }}
