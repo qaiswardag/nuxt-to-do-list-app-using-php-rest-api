@@ -1,11 +1,11 @@
 <template>
-  <div class="pt-20 sm:px-20 px-8 text-center pb-60 bg-gray-100 min-h-screen">
+  <div class="pt-20 sm:px-20 px-8 text-center pb-60 min-h-screen">
     <div v-if="isPending">
       <Spinner></Spinner>
     </div>
     <h1 class="sm:text-4xl mb-12 font-semibold">Update task</h1>
     <div class="space-y-6">
-      <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:py-16 sm:px-12">
+      <div class=" shadow px-4 py-5 sm:rounded-lg sm:py-16 sm:px-12">
         <div class="md:grid md:grid-cols-3 md:gap-6">
           <div class="md:col-span-1 text-left">
             <h3 class="text-lg font-medium leading-6 text-gray-900">Update your task</h3>
@@ -24,19 +24,51 @@
                 <div>
                   <label for="about" class="block text-sm font-medium text-gray-700"> Description </label>
                   <div class="mt-1">
-                <textarea v-model="descriptionTask" id="about" name="about" rows="3"
-                          class="shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full sm:text-sm border border-gray-300 rounded-md"
-                          :placeholder="task.description"/>
+                <textarea
+                    v-model="descriptionTask" id="about" name="about" rows="3"
+                    class="shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full sm:text-sm border border-gray-300 rounded-md"
+                    :placeholder="task.description"/>
                   </div>
                   <p class="mt-2 text-sm text-gray-500">Brief description for your task.</p>
                 </div>
 
                 <div class="col-span-6">
+                  <label for="title" class="block text-sm font-medium text-gray-700">Completed</label>
+                  <Switch
+                      v-model="task.completed"
+                      :class="[task.completed ? 'bg-yellow-400' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 mt-2']">
+                    <span class="sr-only">Use setting</span>
+                    <span
+                        :class="[task.completed ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']">
+      <span
+          :class="[task.completed ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200', 'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity']"
+          aria-hidden="true">
+        <svg class="h-3 w-3 text-gray-800" fill="none" viewBox="0 0 12 12">
+          <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span
+          :class="[task.completed ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100', 'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity']"
+          aria-hidden="true">
+        <svg class="h-3 w-3 text-green-600" fill="currentColor" viewBox="0 0 12 12">
+          <path
+              d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z"/>
+        </svg>
+      </span>
+    </span>
+                  </Switch>
+                </div>
+
+
+                <div class="col-span-6">
                   <label for="deadline" class="block text-sm font-medium text-gray-700 mt-12">Deadline. Current value:
-                    {{ task.deadline }}</label>
+                    {{ task.deadline ? task.deadline : 'Not set' }}</label>
                   <input v-model="deadlineTask" type="datetime-local" name="deadline" id="deadline" autocomplete="title"
                          class="mt-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                 </div>
+
+
                 <div class="flex justify-start mt-10">
                   <button type="button"
                           class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300">
@@ -78,9 +110,11 @@
 
 <script setup>
 import {onMounted} from "vue";
+import {Switch} from '@headlessui/vue'
+import {TrashIcon} from '@heroicons/vue/solid'
 
 
-// variables
+// variables for form
 const titleTask = ref(null);
 const descriptionTask = ref(null);
 const deadlineTask = ref(null);
@@ -117,14 +151,31 @@ const {isPending, error, loadData} = useAjax();
 //
 // task
 const task = ref(null)
+// task object for collecting relevant data from api and renamming
+const taskObj = ref({});
 //
 //
 // async function
 const loadTasks = async function (taskID) {
+  // set tasks object to empty on each load
+  taskObj.value = {};
   try {
     // try
-    const data = await loadData(`http://localhost/v1/tasks/${taskID}`, {}, 0)
-    task.value = data.data.tasks[0];
+    const data = await loadData(`http://localhost/v1/tasks/${taskID}`, {}, {})
+
+    // task data
+    taskObj.value = {
+      id: data.data.tasks[0].id,
+      title: data.data.tasks[0].title,
+      description: data.data.tasks[0].description,
+      deadline: data.data.tasks[0].deadline,
+      completed: data.data.tasks[0].completed === 'Y' ? true : false,
+    }
+
+    console.log('obj is: ', taskObj.value)
+
+    // update task with data from api
+    task.value = taskObj.value;
     // catch
   } catch (err) {
 
@@ -162,7 +213,7 @@ const updateTask = async function (taskObj) {
       headers: {
         'Content-Type': 'application/json'
       },
-    }, 0,)
+    })
 
 
     // handle error in returned data
@@ -218,7 +269,7 @@ const updateTask = async function (taskObj) {
 //
 //
 // submit form
-const submitForm = async function (event) {
+const submitForm = async function () {
   // date function
   const taskDeadline = new Date(deadlineTask.value);
   const taskDate = taskDeadline.getDate();
@@ -255,8 +306,10 @@ const submitForm = async function (event) {
     title: titleTask.value,
     description: descriptionTask.value,
     deadline: taskDatelineStr,
-    completed: 'N',
+    completed: task.value.completed === true ? 'Y' : 'N',
   }
+
+  console.log('what is obj to be submitted: ', taskObj)
 
   // create task
   updateTask(taskObj)

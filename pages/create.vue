@@ -120,7 +120,7 @@ const createTask = async function (taskObj) {
       headers: {
         'Content-Type': 'application/json'
       },
-    }, 0,)
+    }, {})
 
     // handle error in returned data
     if (taskData.statusCode === 400) {

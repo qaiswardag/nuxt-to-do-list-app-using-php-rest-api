@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 style="min-height: 60px" class="sm:text-2xl text-2xl mb-4 font-semibold">
+    <h1 class="sm:text-2xl text-2xl mb-4 font-semibold">
       {{ task.title }}
     </h1>
     <div>
