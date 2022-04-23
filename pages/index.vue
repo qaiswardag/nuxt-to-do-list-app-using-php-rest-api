@@ -207,9 +207,6 @@ const loadTasks = async function (pageNumber) {
 //
 //
 const toggleCompleted = async function (id, completedTask) {
-  // set tasks object to empty on each load
-  tasksObj.value = {}
-  //
   // update task completed
   try {
     // try
@@ -236,23 +233,6 @@ const toggleCompleted = async function (id, completedTask) {
 
       throw new Error(messageError.toString())
     }
-
-    // data
-    data.data.tasks.forEach((task) => {
-      //
-      tasksObj.value = {
-        id: task.id,
-        title: task.title,
-        description: task.description,
-        deadline: task.deadline,
-        completed: task.completed === 'Y' ? true : false,
-      }
-
-      // update tasks
-      tasks.value = tasks.value.filter((task) => {
-        return task.id !== tasksObj.id
-      })
-    })
 
     // catch
   } catch (err) {

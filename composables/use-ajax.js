@@ -12,11 +12,15 @@ export const useAjax = function () {
         // is pending
         isPending.value = options.pending;
         responseTime.value = options.timeout;
+
+        // set is pending to null if not set
+        if (isPending.value === undefined) {
+            isPending.value = null;
+        }
         // set response timeout to 0 if not set
         if (responseTime.value === undefined) {
             responseTime.value = 0;
         }
-
         //
         // timer
         const timer = setTimeout(() => {

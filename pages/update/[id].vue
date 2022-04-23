@@ -36,7 +36,7 @@
                   <label for="title" class="block text-sm font-medium text-gray-700">Completed</label>
                   <Switch
                       v-model="task.completed"
-                      :class="[task.completed ? 'bg-yellow-400' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 mt-2']">
+                      :class="[task.completed ? 'bg-green-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 mt-2']">
                     <span class="sr-only">Use setting</span>
                     <span
                         :class="[task.completed ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']">
@@ -172,8 +172,6 @@ const loadTasks = async function (taskID) {
       completed: data.data.tasks[0].completed === 'Y' ? true : false,
     }
 
-    console.log('obj is: ', taskObj.value)
-
     // update task with data from api
     task.value = taskObj.value;
     // catch
@@ -193,6 +191,17 @@ const loadTasks = async function (taskID) {
         thirdButtonText: 'Refresh Page',
       }
     });
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      error.value = false;
+      openModal.value = false;
+    }
+    // handle modal click
+    thirdModalButtonFunction.value = function () {
+      error.value = false;
+      openModal.value = false;
+      location.reload(true);
+    }
     console.log('unable to fetch:', err);
   }
 }
@@ -209,11 +218,12 @@ const updateTask = async function (taskObj) {
     // try
     const taskData = await loadData(`http://localhost/v1/tasks/${route.params.id}`, {
       method: 'PATCH',
+      // cache: 'no-cache',
       body: JSON.stringify(taskObj),
       headers: {
         'Content-Type': 'application/json'
       },
-    })
+    }, {})
 
 
     // handle error in returned data
@@ -308,8 +318,6 @@ const submitForm = async function () {
     deadline: taskDatelineStr,
     completed: task.value.completed === true ? 'Y' : 'N',
   }
-
-  console.log('what is obj to be submitted: ', taskObj)
 
   // create task
   updateTask(taskObj)
