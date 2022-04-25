@@ -10,5 +10,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
     return navigateTo('/login')
     // return abortNavigation()
+    // abortNavigation (err?: string | Error) - Aborts the navigation, with an optional error message
 
 })
