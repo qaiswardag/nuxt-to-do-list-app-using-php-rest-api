@@ -5,29 +5,39 @@ export const useAjax = function () {
 
     const controller = new AbortController();
     const signal = controller.signal;
-    const responseTime = ref();
+    const abortTimeout = ref(null);
+    const additionalTime = ref(null);
     //
 
-    const loadData = async function (url, data = {}, options = {pending: true, timeout: 0}) {
+    const loadData = async function (url,
+                                     data = {},
+                                     options = {pending: true, abortTimeoutTime: 8000, additionalCallTime: 0}) {
         // is pending
         isPending.value = options.pending;
-        responseTime.value = options.timeout;
+        abortTimeout.value = options.abortTimeoutTime;
+        additionalTime.value = options.additionalCallTime;
 
         // set is pending to null if not set
         if (isPending.value === undefined) {
             isPending.value = null;
         }
-        // set response timeout to 0 if not set
-        if (responseTime.value === undefined) {
-            responseTime.value = 0;
+        // set abourt timeout time to 8000 if not set
+        if (abortTimeout.value === undefined) {
+            abortTimeout.value = 8000;
         }
+
+        // set response timeout to 0 if not set
+        if (additionalTime.value === undefined) {
+            additionalTime.value = 0;
+        }
+
         //
         // timer
         const timer = setTimeout(() => {
             controller.abort();
-        }, 8000);
+        }, abortTimeout.value);
 
-        const promise = usePromise(responseTime.value);
+        const promise = usePromise(additionalTime.value);
         try {
             await promise;
 

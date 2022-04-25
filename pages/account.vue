@@ -3,3 +3,11 @@
     <h1 class="sm:text-4xl text-2xl mb-12 font-semibold">Account</h1>
   </div>
 </template>
+
+
+<script setup>
+definePageMeta({
+  middleware: ["auth"]
+  // or middleware: 'auth'
+})
+</script>

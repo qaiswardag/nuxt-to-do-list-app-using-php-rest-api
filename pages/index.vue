@@ -42,6 +42,12 @@
                 <TrashIcon class="h-4 w-4" aria-hidden="true"/>
               </button>
             </div>
+            <p class="text-xs bg-yellow-100 px-2 py-1 text-gray-800 rounded-md ml-2 flex justify-center items-center">
+              Deadline:
+              {{
+                task.deadline ? task.deadline : 'Not added'
+              }}
+            </p>
 
             <div
                 class="w-full inline-block  group focus-within:ring-2 focus-within:ring-inset focus-within:ring-yellow-300 rounded-md py-16 px-8">
@@ -103,7 +109,7 @@
 <script setup>
 import {onMounted} from 'vue'
 import {Switch} from '@headlessui/vue'
-import {TrashIcon, PencilIcon} from '@heroicons/vue/solid'
+import {TrashIcon, PencilIcon, CalendarIcon} from '@heroicons/vue/solid'
 
 // use router
 const router = useRouter()
@@ -132,7 +138,6 @@ const tasks = ref([])
 const tasksObj = ref({})
 // page, row, page etc. for each call
 const pagesRowsDataFromApi = ref({})
-// completed
 // import ajax
 const {isPending, error, loadData} = useAjax()
 // current page
@@ -150,7 +155,7 @@ const loadTasks = async function (pageNumber) {
     // try
     const data = await loadData(
         `http://localhost/v1/tasks/page/${pageNumber}`,
-        {},
+        {cache: 'no-cache',},
         {}
     )
     //

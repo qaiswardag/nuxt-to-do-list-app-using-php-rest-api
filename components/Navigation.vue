@@ -51,6 +51,24 @@
           </NuxtLink>
         </div>
       </div>
+
+      <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">user logged in:
+        {{ userStore.user ? 'Logged in' : 'Logged out' }}
+      </div>
+      <div v-if="userStore.user">
+        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">sessionID: {{ userStore.user.sessionID }}</div>
+
+        <div class="py-2 pl-2 border border-amber-500 my-4">access token: {{ userStore.user.accessToken }}</div>
+        <div class="py-2 pl-2 border border-amber-500 my-4">access token expires in:
+          {{ userStore.user.accessTokenExpiresIn }}
+        </div>
+        <div class="py-2 pl-2 border border-green-600 my-4">refresh token: {{ userStore.user.refreshToken }}</div>
+        <div class="py-2 pl-2 border border-green-600 my-4">refresh token expires in:
+          {{ userStore.user.refreshTokenExpiresIn }}
+        </div>
+      </div>
+
+
     </div>
 
     <transition enter-active-class="duration-200 ease-out" enter-from-class="opacity-0 scale-95"
@@ -119,7 +137,7 @@
   </Popover>
 </template>
 
-<script>
+<script setup>
 import {Popover, PopoverButton, PopoverGroup, PopoverPanel} from '@headlessui/vue';
 import {
   BookmarkAltIcon,
@@ -136,20 +154,11 @@ import {
   XIcon,
 } from '@heroicons/vue/outline';
 import {ChevronDownIcon} from '@heroicons/vue/solid';
+import {useUsersStore} from "../stores";
 
 
-export default {
-  components: {
-    Popover,
-    PopoverButton,
-    PopoverGroup,
-    PopoverPanel,
-    ChevronDownIcon,
-    MenuIcon,
-    XIcon,
-  },
-  setup() {
-    return {};
-  },
-};
+const userStore = computed(() => {
+  return useUsersStore()
+})
+
 </script>

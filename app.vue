@@ -1,6 +1,6 @@
 <template>
   <div>
-  <Navigation></Navigation>
+    <Navigation></Navigation>
     <NuxtLayout>
       <NuxtPage/>
     </NuxtLayout>
@@ -8,6 +8,12 @@
 </template>
 
 
-<script>
+<script setup>
+import {useUsersStore} from "./stores";
+
+const userStore = computed(() => {
+  return useUsersStore()
+})
+
 
 </script>
