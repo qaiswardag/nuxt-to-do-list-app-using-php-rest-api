@@ -1,7 +1,7 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <TransitionRoot :show="open" as="template">
-    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="toggleModal">
+    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="firstButton">
       <div
           class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0"
@@ -42,10 +42,7 @@
                 <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
                   {{ title }}
                 </DialogTitle>
-                <div class="mt-2">
-                  <p class="text-sm text-gray-500">
-                    {{ description }}
-                  </p>
+                <div v-html="description" class="mt-2 text-sm text-gray-500">
                 </div>
               </div>
             </div>
@@ -132,9 +129,8 @@ export default {
     BellIcon
   },
   props: {
-    optionsAmount: {
+    id: {
       type: Number,
-      required: true,
     },
     gridColumnAmount: {
       type: Number,
@@ -167,25 +163,22 @@ export default {
   },
 
   setup(props, context) {
-    // open
-    // const open = ref(true);
-
-    // cancel function
+    // first button function
     const firstButton = function () {
       context.emit('firstModalButtonFunction');
     };
 
-    // discard  function
+    // second button  function
     const secondButton = function () {
       context.emit('secondModalButtonFunction');
     };
 
-    // accept function
+    // third button function
     const thirdButton = function () {
       context.emit('thirdModalButtonFunction');
     };
 
-    // open modal function
+    // toggle modal function
     const toggleModal = function () {
       context.emit('toggleModal');
     };
