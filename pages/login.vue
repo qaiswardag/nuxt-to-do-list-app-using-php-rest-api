@@ -130,8 +130,6 @@ const submit = async function () {
     thirdModalButtonFunction.value = function () {
       openModal.value = false
     }
-
-    console.log('login error: ', err)
   }
 }
 </script>

@@ -56,11 +56,17 @@
 
 <script setup>
 import { ref } from 'vue'
+// store
+import { useUsersStore } from '../stores'
 // import {useRouter} from 'vue-router'
 const titleTask = ref(null)
 const descriptionTask = ref(null)
 const deadlineTask = ref(null)
 
+// store
+const userStore = computed(() => {
+  return useUsersStore()
+})
 //
 // use dynamic modal
 const {
@@ -100,25 +106,40 @@ const createTask = async function (taskObj) {
         body: JSON.stringify(taskObj),
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `${userStore.value.getUser?.accessToken}`,
         },
       },
       {}
     )
 
-    // handle error in returned data
-    if (taskData.statusCode === 400) {
-      let messageError = []
+    // modal successful
+    dynamicModal({
+      options: {
+        optionsAmount: 2,
+      },
+      design: {
+        typeOfModal: 'success',
+        gridColumnAmount: 2,
+      },
+      content: {
+        title: 'Task have been successfully created',
+        firstButtonText: 'Close',
+        thirdButtonText: 'All tasks',
+      },
+    })
 
-      // foreach on message
-      taskData.messages.forEach((message) => {
-        messageError.push(message)
-      })
-
-      throw new Error(messageError.toString())
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      error.value = false
+      openModal.value = false
     }
-
-    // push to tasks
-    // router.push('/');
+    // handle modal click
+    thirdModalButtonFunction.value = function () {
+      error.value = false
+      openModal.value = false
+      // push to tasks
+      router.push('/')
+    }
     //
     // catch
   } catch (err) {
@@ -148,51 +169,78 @@ const createTask = async function (taskObj) {
       openModal.value = false
       location.reload(true)
     }
-
-    // log erros
-    console.log('unable to fetch:', err)
   }
 }
 //
 //
 //
 const submitForm = async function (event) {
-  // date function
-  const taskDeadline = new Date(deadlineTask.value)
-  const taskDate = taskDeadline.getDate()
-  let taskMonth = taskDeadline.getMonth() + 1
+  try {
+    // date function
+    const taskDeadline = new Date(deadlineTask.value)
+    const taskDate = taskDeadline.getDate()
+    let taskMonth = taskDeadline.getMonth() + 1
 
-  if (taskMonth.toString().length === 1) {
-    taskMonth = '0' + taskMonth
+    if (taskMonth.toString().length === 1) {
+      taskMonth = '0' + taskMonth
+    }
+
+    const taskYear = taskDeadline.getFullYear()
+    let taskHour = taskDeadline.getHours()
+
+    if (taskHour.toString().length === 1) {
+      taskHour = '0' + taskHour
+    }
+
+    let taskMinutes = taskDeadline.getMinutes()
+
+    if (taskMinutes.toString().length === 1) {
+      taskMinutes = '0' + taskMinutes
+    }
+
+    let taskDatelineStr = `${taskDate}/${taskMonth}/${taskYear} ${taskHour}:${taskMinutes}`
+
+    if (taskDatelineStr === '1/01/1970 01:00') {
+      taskDatelineStr = null
+    }
+
+    // task obj
+    const taskObj = {
+      title: titleTask.value,
+      description: descriptionTask.value,
+      deadline: taskDatelineStr,
+      completed: 'N',
+    }
+    // create task
+    createTask(taskObj)
+
+    //
+    // catch
+  } catch (err) {
+    // modal for error handling
+    dynamicModal({
+      design: {
+        typeOfModal: 'error',
+        gridColumnAmount: 2,
+      },
+      content: {
+        title: err.message,
+        firstButtonText: 'Close',
+        thirdButtonText: 'Reload Page',
+      },
+    })
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      error.value = false
+      openModal.value = false
+    }
+    // handle modal click
+    thirdModalButtonFunction.value = function () {
+      error.value = false
+      openModal.value = false
+
+      location.reload()
+    }
   }
-
-  const taskYear = taskDeadline.getFullYear()
-  let taskHour = taskDeadline.getHours()
-
-  if (taskHour.toString().length === 1) {
-    taskHour = '0' + taskHour
-  }
-
-  let taskMinutes = taskDeadline.getMinutes()
-
-  if (taskMinutes.toString().length === 1) {
-    taskMinutes = '0' + taskMinutes
-  }
-
-  let taskDatelineStr = `${taskDate}/${taskMonth}/${taskYear} ${taskHour}:${taskMinutes}`
-
-  if (taskDatelineStr === '1/01/1970 01:00') {
-    taskDatelineStr = null
-  }
-
-  // task obj
-  const taskObj = {
-    title: titleTask.value,
-    description: descriptionTask.value,
-    deadline: taskDatelineStr,
-    completed: 'N',
-  }
-  // create task
-  createTask(taskObj)
 }
 </script>

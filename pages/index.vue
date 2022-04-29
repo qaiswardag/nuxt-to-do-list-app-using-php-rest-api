@@ -4,7 +4,7 @@
       <Spinner></Spinner>
     </div>
 
-    <div v-if="tasks">
+    <div v-if="tasks.length >= 0">
       <div v-if="!isPending">
         <div class="sm:grid sm:grid-cols-2 sm:gap-6 grid grid-cols-1 gap-8">
           <div v-for="(task) in tasks" :key="task.id" class="grid-cols-1 border border-gray-100 p-4 rounded-md bg-white gap-4">
@@ -42,12 +42,15 @@
               <TaskDetails :task="task"></TaskDetails>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
-    <div v-if="tasks">
+    <div v-if="tasks.length < 1 && domMounted">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">No tasks</h2>
+    </div>
+
+    <div v-if="tasks.length > 0">
       <div v-if="!isPending">
         <nav aria-label="Pagination" class="bg-white px-4 py-3 flex items-center justify-between sm:px-6 mt-4 rounded-md">
           <div class="hidden sm:block">
@@ -113,6 +116,7 @@ const {
 const firstModalButtonFunction = ref(null)
 const secondModalButtonFunction = ref(null)
 const thirdModalButtonFunction = ref(null)
+const domMounted = ref(null)
 
 // tasks
 const tasks = ref([])
@@ -125,7 +129,6 @@ const { isPending, error, loadData } = useAjax()
 // current page
 const currentPage = ref(1)
 //
-console.log('er:::', userStore.value.getUser.accessToken)
 //
 // async function
 const loadTasks = async function (pageNumber) {
@@ -133,17 +136,18 @@ const loadTasks = async function (pageNumber) {
   tasksObj.value = {}
   // set tasks array to empty on each load
   tasks.value = []
+  // try
   try {
     // try
     const data = await loadData(
       `http://localhost/v1/tasks/page/${pageNumber}`,
       {
         headers: {
-          Authorization: `${userStore.value.getUser.accessToken}`,
+          Authorization: `${userStore.value.getUser?.accessToken}`,
         },
         cache: 'no-cache',
       },
-      {}
+      { pending: true, additionalCallTime: 1000 }
     )
     //
     //
@@ -195,8 +199,6 @@ const loadTasks = async function (pageNumber) {
 
       location.reload()
     }
-    // log erros
-    console.log('unable to fetch:', err)
   }
 }
 //
@@ -213,6 +215,7 @@ const toggleCompleted = async function (id, completedTask) {
         body: JSON.stringify({ completed: completedTask === true ? 'Y' : 'N' }),
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `${userStore.value.getUser?.accessToken}`,
         },
       },
       {}
@@ -250,7 +253,6 @@ const toggleCompleted = async function (id, completedTask) {
       openModal.value = false
       location.reload()
     }
-    console.log('unable to fetch:', err)
   }
 }
 
@@ -286,6 +288,7 @@ const deleteTask = function (id) {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `${userStore.value.getUser?.accessToken}`,
           },
         },
         {}
@@ -316,7 +319,6 @@ const deleteTask = function (id) {
         openModal.value = false
         location.reload()
       }
-      console.log('unable to fetch:', err)
     }
   }
 }
@@ -324,6 +326,9 @@ const deleteTask = function (id) {
 //
 // on mounted load tasks
 onMounted(() => {
+  // after mounted
+  domMounted.value = true
+  // load tasks
   loadTasks(currentPage.value)
 })
 //

@@ -1,6 +1,9 @@
 <template>
   <Popover class="relative bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div v-if="isPending">
+        <Spinner></Spinner>
+      </div>
       <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
         <div class="flex justify-start lg:w-0 lg:flex-1">
           <NuxtLink to="/">
@@ -37,9 +40,9 @@
         <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0 gap-8">
 
           <div v-if="userStore.user">
-            <NuxtLink to="/logout" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+            <button @click="logout" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
               Log out
-            </NuxtLink>
+            </button>
           </div>
 
           <div v-if="!userStore.user" class="flex gap-8 justify-content-center items-center">
@@ -54,22 +57,24 @@
         </div>
       </div>
 
-      <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">user status:
-        {{ userStore.user ? 'Logged in' : 'Logged out' }}
-      </div>
-      <div v-if="userStore.user">
-        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">username: {{ userStore.user.username }}</div>
-        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">fullname: {{ userStore.user.fullname }}</div>
-
-        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">sessionID: {{ userStore.user.sessionID }}</div>
-
-        <div class="py-2 pl-2 border border-amber-500 my-4 break-words">access token: {{ userStore.user.accessToken }}</div>
-        <div class="py-2 pl-2 border border-amber-500 my-4">access token expires in:
-          {{ userStore.user.accessTokenExpiresIn }}
+      <div v-if="false">
+        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">user status:
+          {{ userStore.user ? 'Logged in' : 'Logged out' }}
         </div>
-        <div class="py-2 pl-2 border border-green-600 my-4 break-words">refresh token: {{ userStore.user.refreshToken }}</div>
-        <div class="py-2 pl-2 border border-green-600 my-4">refresh token expires in:
-          {{ userStore.user.refreshTokenExpiresIn }}
+        <div v-if="userStore.user">
+          <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">username: {{ userStore.user.username }}</div>
+          <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">fullname: {{ userStore.user.fullname }}</div>
+
+          <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">sessionID: {{ userStore.user.sessionID }}</div>
+
+          <div class="py-2 pl-2 border border-amber-500 my-4 break-words">access token: {{ userStore.user.accessToken }}</div>
+          <div class="py-2 pl-2 border border-amber-500 my-4">access token expires in:
+            {{ userStore.user.accessTokenExpiresIn }}
+          </div>
+          <div class="py-2 pl-2 border border-green-600 my-4 break-words">refresh token: {{ userStore.user.refreshToken }}</div>
+          <div class="py-2 pl-2 border border-green-600 my-4">refresh token expires in:
+            {{ userStore.user.refreshTokenExpiresIn }}
+          </div>
         </div>
       </div>
 
@@ -113,24 +118,36 @@
 
             </div>
             <div>
-              <NuxtLink to="/register" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-800 bg-yellow-200 hover:bg-yellow-300">
-                Sign up
-              </NuxtLink>
 
-              <p class="mt-6 text-center text-base font-medium text-gray-500">
-                Existing customer?
-                {{ ' ' }}
-                <NuxtLink to="/login" class="text-indigo-600 hover:text-indigo-500">
-                  Sign in
+              <div v-if="userStore.user">
+                <button @click="logout" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-800 bg-yellow-200 hover:bg-yellow-300">
+                  Log out
+                </button>
+              </div>
+
+              <div v-if="!userStore.user">
+                <NuxtLink to="/register" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-800 bg-yellow-200 hover:bg-yellow-300">
+                  Sign up
                 </NuxtLink>
 
-              </p>
+                <p class="mt-6 text-center text-base font-medium text-gray-500">
+                  Existing customer?
+                  {{ ' ' }}
+                  <NuxtLink to="/login" class="text-indigo-600 hover:text-indigo-500">
+                    Sign in
+                  </NuxtLink>
+                </p>
+              </div>
+
             </div>
           </div>
         </div>
       </PopoverPanel>
     </transition>
   </Popover>
+  <DynamicModal :type="typeModal" :optionsAmount="optionsModal" :gridColumnAmount="gridColumnModal" :title="titleModal" :description="descriptionModal" :firstButtonText="firstButtonModal" :secondButtonText="secondButtonModal" :thirdButtonText="thirdButtonModal" :open="openModal" @firstModalButtonFunction="firstModalButtonFunction" @secondModalButtonFunction="secondModalButtonFunction" @thirdModalButtonFunction="thirdModalButtonFunction" @toggleModal="openModal = !openModal">
+  </DynamicModal>
+
 </template>
 
 <script setup>
@@ -155,9 +172,122 @@ import {
   XIcon,
 } from '@heroicons/vue/outline'
 import { ChevronDownIcon } from '@heroicons/vue/solid'
-import { useUsersStore } from '../stores'
 
-const userStore = computed(() => {
-  return useUsersStore()
-})
+import { useUsersStore } from '../stores'
+import { useRouter } from 'vue-router'
+// store
+const userStore = useUsersStore()
+// use router
+const router = useRouter()
+
+// set modal handle functions
+const firstModalButtonFunction = ref(null)
+const secondModalButtonFunction = ref(null)
+const thirdModalButtonFunction = ref(null)
+
+// use dynamic model
+const {
+  dynamicModal,
+  openModal,
+  //s
+  typeModal,
+  optionsModal,
+  gridColumnModal,
+  titleModal,
+  descriptionModal,
+  firstButtonModal,
+  secondButtonModal,
+  thirdButtonModal,
+} = useDynamicModal()
+
+// pending
+const isPending = ref(null)
+
+// handle submit form
+const loadLogout = async function () {
+  // try
+  try {
+    // pending
+    isPending.value = true
+    // invoke store action login function
+    await userStore.setLogout()
+    // pending
+    isPending.value = false
+
+    // modal for success logout
+    dynamicModal({
+      design: {
+        typeOfModal: 'success',
+        gridColumnAmount: 1,
+      },
+      content: {
+        title: 'You successfully logged out',
+        firstButtonText: 'Close',
+      },
+    })
+
+    // push to account page
+
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      openModal.value = false
+      router.push('/login')
+    }
+
+    // catch
+  } catch (err) {
+    // pending
+    isPending.value = false
+    // modal for error handling
+    dynamicModal({
+      options: {
+        optionsAmount: 2,
+      },
+      design: {
+        typeOfModal: 'error',
+        gridColumnAmount: 2,
+      },
+      content: {
+        title: err.message,
+        firstButtonText: 'Close',
+        thirdButtonText: 'Try again',
+      },
+    })
+    // handle modal click
+    firstModalButtonFunction.value = function () {
+      openModal.value = false
+    }
+    // handle modal click
+    thirdModalButtonFunction.value = function () {
+      openModal.value = false
+    }
+  }
+}
+
+// logout
+const logout = function () {
+  dynamicModal({
+    options: {
+      optionsAmount: 2,
+    },
+    design: {
+      typeOfModal: 'warning',
+      gridColumnAmount: 2,
+    },
+    content: {
+      title: 'Are you sure you want to logout',
+      firstButtonText: 'Close',
+      thirdButtonText: 'Log out',
+    },
+  })
+  // handle modal click
+  firstModalButtonFunction.value = function () {
+    openModal.value = false
+  }
+  // handle modal click
+  thirdModalButtonFunction.value = function () {
+    openModal.value = false
+    loadLogout()
+  }
+}
 </script>

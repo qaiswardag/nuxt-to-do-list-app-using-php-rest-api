@@ -106,7 +106,7 @@ export const useUsersStore = defineStore({
               Authorization: this.user.accessToken,
             },
           },
-          { additionalCallTime: 500 }
+          { pending: true, additionalCallTime: 500 }
         );
 
         // clear cookies
