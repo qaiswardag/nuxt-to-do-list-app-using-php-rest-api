@@ -2,15 +2,23 @@
   <div>
     <Navigation></Navigation>
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage/>
     </NuxtLayout>
   </div>
 </template>
 
 
 <script setup>
-import { useUsersStore } from './stores'
+// import store
+import {useUsersStore} from './stores'
+
+//
+//
+// user
 const userStore = computed(() => {
   return useUsersStore()
 })
+
+//
+//
 </script>

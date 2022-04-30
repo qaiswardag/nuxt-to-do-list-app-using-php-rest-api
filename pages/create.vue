@@ -16,26 +16,33 @@
 
               <div class="col-span-6">
                 <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                <input v-model="titleTask" type="text" name="title" id="title" autocomplete="title" placeholder="Title" class="mt-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                <input v-model="titleTask" type="text" name="title" id="title" autocomplete="title" placeholder="Title"
+                       class="mt-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
               </div>
 
               <div>
                 <label for="about" class="block text-sm font-medium text-gray-700"> Description </label>
                 <div class="mt-1">
-                  <textarea v-model="descriptionTask" id="about" name="about" rows="3" class="shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="Descript your task" />
+                  <textarea v-model="descriptionTask" id="about" name="about" rows="3"
+                            class="shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full sm:text-sm border border-gray-300 rounded-md"
+                            placeholder="Descript your task"/>
                 </div>
                 <p class="mt-2 text-sm text-gray-500">Brief description for your task.</p>
               </div>
 
               <div class="col-span-6">
                 <label for="deadline" class="block text-sm font-medium text-gray-700">Deadline</label>
-                <input v-model="deadlineTask" type="datetime-local" name="deadline" id="deadline" autocomplete="title" placeholder="Deadline" class="mt-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                <input v-model="deadlineTask" type="datetime-local" name="deadline" id="deadline" autocomplete="title"
+                       placeholder="Deadline"
+                       class="mt-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
               </div>
               <div class="flex justify-start mt-10">
-                <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300">
+                <button type="button"
+                        class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300">
                   Cancel
                 </button>
-                <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-800 bg-yellow-200 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300">
+                <button type="submit"
+                        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-800 bg-yellow-200 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300">
                   Create
                 </button>
               </div>
@@ -46,7 +53,12 @@
       </div>
     </div>
 
-    <DynamicModal :type="typeModal" :optionsAmount="optionsModal" :gridColumnAmount="gridColumnModal" :title="titleModal" :description="descriptionModal" :firstButtonText="firstButtonModal" :secondButtonText="secondButtonModal" :thirdButtonText="thirdButtonModal" :open="openModal" @firstModalButtonFunction="firstModalButtonFunction" @secondModalButtonFunction="secondModalButtonFunction" @thirdModalButtonFunction="thirdModalButtonFunction" @toggleModal="openModal = !openModal">
+    <DynamicModal :type="typeModal" :id="idModal" :gridColumnAmount="gridColumnModal" :title="titleModal"
+                  :description="descriptionModal" :firstButtonText="firstButtonModal"
+                  :secondButtonText="secondButtonModal" :thirdButtonText="thirdButtonModal" :open="openModal"
+                  @firstModalButtonFunction="firstModalButtonFunction"
+                  @secondModalButtonFunction="secondModalButtonFunction"
+                  @thirdModalButtonFunction="thirdModalButtonFunction" @toggleModal="openModal = !openModal">
     </DynamicModal>
 
   </div>
@@ -55,9 +67,9 @@
 
 
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 // store
-import { useUsersStore } from '../stores'
+import {useUsersStore} from '../stores'
 // import {useRouter} from 'vue-router'
 const titleTask = ref(null)
 const descriptionTask = ref(null)
@@ -68,13 +80,13 @@ const userStore = computed(() => {
   return useUsersStore()
 })
 //
-// use dynamic modal
+// use dynamic model
 const {
   dynamicModal,
   openModal,
   //
+  idModal,
   typeModal,
-  optionsModal,
   gridColumnModal,
   titleModal,
   descriptionModal,
@@ -82,6 +94,7 @@ const {
   secondButtonModal,
   thirdButtonModal,
 } = useDynamicModal()
+
 // set modal handle functions
 const firstModalButtonFunction = ref(null)
 const secondModalButtonFunction = ref(null)
@@ -91,7 +104,7 @@ const thirdModalButtonFunction = ref(null)
 const router = useRouter()
 // tasks
 // import ajax
-const { isPending, error, loadData } = useAjax()
+const {isPending, error, loadData} = useAjax()
 // current page
 //
 //
@@ -100,23 +113,20 @@ const createTask = async function (taskObj) {
   // try
   try {
     const taskData = await loadData(
-      'http://localhost/v1/tasks',
-      {
-        method: 'POST',
-        body: JSON.stringify(taskObj),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${userStore.value.getUser?.accessToken}`,
+        'http://localhost/v1/tasks',
+        {
+          method: 'POST',
+          body: JSON.stringify(taskObj),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${userStore.value.getUser?.accessToken}`,
+          },
         },
-      },
-      {}
+        {}
     )
 
     // modal successful
     dynamicModal({
-      options: {
-        optionsAmount: 2,
-      },
       design: {
         typeOfModal: 'success',
         gridColumnAmount: 2,
@@ -144,9 +154,6 @@ const createTask = async function (taskObj) {
     // catch
   } catch (err) {
     dynamicModal({
-      options: {
-        optionsAmount: 2,
-      },
       design: {
         typeOfModal: 'error',
         gridColumnAmount: 2,
@@ -172,11 +179,15 @@ const createTask = async function (taskObj) {
   }
 }
 //
-//
-//
 const submitForm = async function (event) {
+  //
   try {
-    // date function
+    // verify if user is true
+    if (!userStore.value.getUser) {
+      throw new Error('You are not logged in');
+    }
+    //
+    // handle date
     const taskDeadline = new Date(deadlineTask.value)
     const taskDate = taskDeadline.getDate()
     let taskMonth = taskDeadline.getMonth() + 1
@@ -226,7 +237,7 @@ const submitForm = async function (event) {
       content: {
         title: err.message,
         firstButtonText: 'Close',
-        thirdButtonText: 'Reload Page',
+        thirdButtonText: 'Try again',
       },
     })
     // handle modal click
@@ -238,8 +249,6 @@ const submitForm = async function (event) {
     thirdModalButtonFunction.value = function () {
       error.value = false
       openModal.value = false
-
-      location.reload()
     }
   }
 }

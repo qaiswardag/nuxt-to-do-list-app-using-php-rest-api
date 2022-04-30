@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import {ref} from 'vue';
 // open modal
 const openModal = ref(false);
 // modal content
@@ -12,21 +12,22 @@ const secondButtonModal = ref(null);
 const thirdButtonModal = ref(null);
 
 const useDynamicModal = function () {
+  // dynamic modal
   const dynamicModal = function ({
-    design: { typeOfModal = 'success', gridColumnAmount = 1 },
-    content: {
-      id = 0,
-      title = 'New message',
-      description = `${title}`,
-      firstButtonText = 'Close',
-      secondButtonText,
-      thirdButtonText,
-    },
-  }) {
+                                   design: {typeOfModal = 'success', gridColumnAmount = 1},
+                                   content: {
+                                     id = 0,
+                                     title = 'New message',
+                                     description = `${title}`,
+                                     firstButtonText = 'Close',
+                                     secondButtonText,
+                                     thirdButtonText,
+                                   },
+                                 }) {
     // open modal set to true
     openModal.value = true;
+
     // get content for modal
-    console.log();
     idModal.value = id;
 
     gridColumnModal.value = gridColumnAmount;
