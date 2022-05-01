@@ -38,11 +38,8 @@
               {{ userStore.user.fullname }}
             </NuxtLink>
           </div>
-
         </PopoverGroup>
-
         <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0 gap-8">
-
           <div v-if="!userStore.user" class="flex gap-8 justify-content-center items-center">
             <NuxtLink to="/login" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
               Sign
@@ -53,11 +50,8 @@
               Sign up
             </NuxtLink>
           </div>
-
         </div>
       </div>
-
-
     </div>
 
     <transition enter-active-class="duration-200 ease-out" enter-from-class="opacity-0 scale-95"
@@ -105,7 +99,6 @@
 
             </div>
             <div>
-
               <div v-if="!userStore.user">
                 <NuxtLink to="/register"
                           class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-800 bg-yellow-200 hover:bg-yellow-300">
@@ -162,9 +155,5 @@ const userStore = useUsersStore()
 const router = useRouter()
 
 const isPending = ref(null)
-//
-//
-//
-//
 //
 </script>

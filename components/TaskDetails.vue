@@ -20,7 +20,6 @@ import {
   ReceiptRefundIcon,
 } from '@heroicons/vue/outline'
 
-
 export default {
   props: {
     task: {required: true}

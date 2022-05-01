@@ -82,7 +82,6 @@
         </div>
       </div>
     </div>
-
     <DynamicModal :type="typeModal" :id="idModal" :gridColumnAmount="gridColumnModal" :title="titleModal"
                   :description="descriptionModal" :firstButtonText="firstButtonModal"
                   :secondButtonText="secondButtonModal" :thirdButtonText="thirdButtonModal" :open="openModal"
@@ -90,10 +89,7 @@
                   @secondModalButtonFunction="secondModalButtonFunction"
                   @thirdModalButtonFunction="thirdModalButtonFunction" @toggleModal="openModal = !openModal">
     </DynamicModal>
-
-
   </div>
-
 </template>
 
 
@@ -270,8 +266,6 @@ const updateTask = async function (taskObj) {
     }
   }
 }
-//
-//
 //
 // submit form
 const submitForm = async function () {

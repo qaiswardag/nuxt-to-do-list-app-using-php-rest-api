@@ -8,8 +8,8 @@ const userStore = computed(() => {
 export const useAccessTokenVerifier = function () {
     // set access token expiry in UTC format
     const setTokenExpiresAt = function (expiresIn) {
-        // set expiry 20 percent less than the one we receive from the api
-        expiresIn = expiresIn * 0.8
+        // set expiry 10 percent less than the one we receive from the api
+        expiresIn = expiresIn * 0.9
         // current date
         const currentDate = new Date();
         //
@@ -30,7 +30,6 @@ export const useAccessTokenVerifier = function () {
     };
     // token expiry checker & new token returner
     const tokenVerifier = async function () {
-
         // try
         try {
             // verify if user is true

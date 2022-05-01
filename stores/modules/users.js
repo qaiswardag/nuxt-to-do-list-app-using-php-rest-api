@@ -162,6 +162,7 @@ export const useUsersStore = defineStore({
                 throw err;
             }
         },
+
         // log out and clear auth from client system
         async setLogout() {
             // try
