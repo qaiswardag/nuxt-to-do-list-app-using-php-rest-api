@@ -74,11 +74,12 @@ import {useUsersStore} from '../stores'
 const titleTask = ref(null)
 const descriptionTask = ref(null)
 const deadlineTask = ref(null)
-
 // store
 const userStore = computed(() => {
   return useUsersStore()
 })
+// tokens verifier
+const {tokenVerifier} = useAccessTokenVerifier()
 //
 // use dynamic model
 const {
@@ -112,6 +113,9 @@ const {isPending, error, loadData} = useAjax()
 const createTask = async function (taskObj) {
   // try
   try {
+    // handle access tokens
+    const token = await tokenVerifier()
+    //
     const taskData = await loadData(
         'http://localhost/v1/tasks',
         {
@@ -119,7 +123,7 @@ const createTask = async function (taskObj) {
           body: JSON.stringify(taskObj),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `${userStore.value.getUser?.accessToken}`,
+            Authorization: `${token}`,
           },
         },
         {}
@@ -182,10 +186,6 @@ const createTask = async function (taskObj) {
 const submitForm = async function (event) {
   //
   try {
-    // verify if user is true
-    if (!userStore.value.getUser) {
-      throw new Error('You are not logged in');
-    }
     //
     // handle date
     const taskDeadline = new Date(deadlineTask.value)
@@ -253,3 +253,5 @@ const submitForm = async function (event) {
   }
 }
 </script>
+
+

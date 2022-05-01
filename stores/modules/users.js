@@ -1,14 +1,11 @@
 import {defineStore} from 'pinia';
 import sessions from '~/composables/sessions';
-import {useTokenExpiryChecker} from '~/composables/use-token-expiry-checker';
-
-
-//
+import {useAccessTokenVerifier} from '~/composables/use-access-token-verifier';
 
 // import ajax
 const {loadData} = useAjax();
 // import token expiry checker
-const {setTokenExpiresAt} = useTokenExpiryChecker();
+const {setTokenExpiresAt} = useAccessTokenVerifier();
 
 export const useUsersStore = defineStore({
     id: 'user',
@@ -39,7 +36,6 @@ export const useUsersStore = defineStore({
                         },
                         body: JSON.stringify(user),
                     },
-                    {additionalCallTime: 500}
                 );
 
                 // clear cookies
@@ -74,13 +70,13 @@ export const useUsersStore = defineStore({
                 //
                 // set when access token expires in UTC format
                 const accessTokenExpiresAt = setTokenExpiresAt(
-                    // data.data.access_token_expires_in
-                    10
+                    // set expiry 20 percent less than the one we receive from the api
+                    data.data.access_token_expires_in * 0.8
                 );
                 // set when refresh token expires in UTC format
                 const refreshTokenExpiresAt = setTokenExpiresAt(
-                    // data.data.refresh_token_expires_in
-                    20000000000
+                    // set expiry 20 percent less than the one we receive from the api
+                    data.data.refresh_token_expires_in * 0.8
                 );
 
                 // set local storage for user login
@@ -125,7 +121,6 @@ export const useUsersStore = defineStore({
                         },
                         body: JSON.stringify({refresh_token: this.user.refreshToken}),
                     },
-                    {pending: true, additionalCallTime: 500}
                 );
 
                 // clear cookies
@@ -134,13 +129,11 @@ export const useUsersStore = defineStore({
                 //
                 // set when access token expires in UTC format
                 const accessTokenExpiresAt = setTokenExpiresAt(
-                    // data.data.access_token_expires_in
-                    10
+                    data.data.access_token_expires_in
                 );
                 // set when refresh token expires in UTC format
                 const refreshTokenExpiresAt = setTokenExpiresAt(
-                    // data.data.refresh_token_expires_in
-                    2000
+                    data.data.refresh_token_expires_in
                 );
 
                 // set local storage for user login
@@ -165,8 +158,6 @@ export const useUsersStore = defineStore({
                 //
                 //
             } catch (err) {
-                // clear cookies
-                sessions.clearTokensCookie();
                 // error
                 throw err;
             }
@@ -188,7 +179,6 @@ export const useUsersStore = defineStore({
                             Authorization: this.user.accessToken,
                         },
                     },
-                    {pending: true, additionalCallTime: 500}
                 );
 
                 // clear cookies

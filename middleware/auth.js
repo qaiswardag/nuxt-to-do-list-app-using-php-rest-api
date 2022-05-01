@@ -5,7 +5,7 @@ const userStore = computed(() => {
 })
 
 export default defineNuxtRouteMiddleware((to, from) => {
-    if (userStore.value.user) {
+    if (userStore.value.getUser) {
         return navigateTo()
     }
     return navigateTo('/login')

@@ -39,13 +39,6 @@
             </NuxtLink>
           </div>
 
-          <div v-if="true">
-            <NuxtLink to="/account" class="text-base font-medium text-gray-500 hover:text-gray-900">
-              account
-            </NuxtLink>
-
-          </div>
-
         </PopoverGroup>
 
         <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0 gap-8">
@@ -61,27 +54,6 @@
             </NuxtLink>
           </div>
 
-        </div>
-      </div>
-
-
-      <div v-if="userStore.user">
-        <div class="py-2 pl-2 border border-amber-500 my-4">access token expires at:
-          {{ userStore.user.accessTokenExpiresAt }}
-        </div>
-        <div class="py-2 pl-2 border border-green-600 my-4">refresh token expires at:
-          {{ userStore.user.refreshTokenExpiresAt }}
-        </div>
-        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">username: {{ userStore.user.username }}</div>
-        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">fullname: {{ userStore.user.fullname }}</div>
-        <div class="py-2 pl-2 border-2 border-fuchsia-800 my-4">sessionID: {{ userStore.user.sessionID }}</div>
-        <div class="py-2 pl-2 border border-amber-500 my-4 break-words">access token: {{
-            userStore.user.accessToken
-          }}
-        </div>
-        <div class="py-2 pl-2 border border-green-600 my-4 break-words">refresh token: {{
-            userStore.user.refreshToken
-          }}
         </div>
       </div>
 

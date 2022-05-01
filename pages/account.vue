@@ -52,10 +52,10 @@
           </div>
           <div>
             <h3 class="text-sm font-medium text-gray-900">
-              <a @click="logout" class="focus:outline-none">
+              <button @click="logout" class="focus:outline-none">
                 <span class="absolute inset-0" aria-hidden="true"/>
                 Log out
-              </a>
+              </button>
             </h3>
             <p class="mt-1 text-sm text-gray-500">Log out from your account.</p>
           </div>
@@ -74,7 +74,10 @@
 
 
 <script setup>
-
+definePageMeta({
+  middleware: ['auth'],
+  // or middleware: 'auth'
+})
 
 // icons
 import {ArrowCircleRightIcon, ViewListIcon} from '@heroicons/vue/outline'

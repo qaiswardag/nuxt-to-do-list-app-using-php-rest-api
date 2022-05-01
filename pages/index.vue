@@ -116,14 +116,15 @@ import {onMounted} from 'vue'
 import {Switch} from '@headlessui/vue'
 import {TrashIcon, PencilIcon, CalendarIcon} from '@heroicons/vue/solid'
 import {useUsersStore} from '../stores'
-import {useTokenExpiryChecker} from '~/composables/use-token-expiry-checker'
 
 // use router
 const router = useRouter()
-
+// user store
 const userStore = computed(() => {
   return useUsersStore()
 })
+// tokens verifier
+const {tokenVerifier} = useAccessTokenVerifier()
 
 // use dynamic model
 const {
@@ -159,8 +160,6 @@ const {isPending, error, loadData} = useAjax()
 // current page
 const currentPage = ref(1)
 //
-const {isTokenExpired} = useTokenExpiryChecker()
-//
 //
 // async function
 const loadTasks = async function (pageNumber) {
@@ -172,7 +171,7 @@ const loadTasks = async function (pageNumber) {
   // try
   try {
     // handle access tokens
-    const token = await isTokenExpired()
+    const token = await tokenVerifier()
     // try
     const data = await loadData(
         `http://localhost/v1/tasks/page/${pageNumber}`,
@@ -182,7 +181,7 @@ const loadTasks = async function (pageNumber) {
           },
           cache: 'no-cache',
         },
-        {pending: false, additionalCallTime: 50}
+        {pending: true, additionalCallTime: 200}
     )
     //
     //
@@ -242,6 +241,8 @@ const loadTasks = async function (pageNumber) {
 const toggleCompleted = async function (id, completedTask) {
   // update task completed
   try {
+    // handle access tokens
+    const token = await tokenVerifier()
     // try
     const data = await loadData(
         `http://localhost/v1/tasks/${id}`,
@@ -250,10 +251,10 @@ const toggleCompleted = async function (id, completedTask) {
           body: JSON.stringify({completed: completedTask === true ? 'Y' : 'N'}),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `${userStore.value.getUser?.accessToken}`,
+            Authorization: `${token}`,
           },
         },
-        {}
+        {pending: false, additionalCallTime: 0}
     )
 
     // handle error in returned data
@@ -286,8 +287,8 @@ const toggleCompleted = async function (id, completedTask) {
     firstModalButtonFunction.value = function () {
       error.value = false
       openModal.value = false
-      location.reload()
     }
+    console.log('not able to update: ', err)
   }
 }
 
@@ -318,7 +319,7 @@ const deleteTask = function (id) {
     // delete task
     try {
       // handle access tokens
-      const token = await isTokenExpired()
+      const token = await tokenVerifier()
       //
       //
       // data
@@ -331,7 +332,6 @@ const deleteTask = function (id) {
               Authorization: `${token}`,
             },
           },
-          {}
       )
 
       // load tasks after deletion of unique task
@@ -366,9 +366,7 @@ const deleteTask = function (id) {
 // on mounted load tasks
 onMounted(async () => {
   // load tasks
-  if (userStore.value.getUser) {
-    await loadTasks(currentPage.value)
-  }
+  await loadTasks(currentPage.value)
   // after mounted
   domMounted.value = true
 })

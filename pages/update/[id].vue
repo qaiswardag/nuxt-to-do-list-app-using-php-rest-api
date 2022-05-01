@@ -115,6 +115,8 @@ const deadlineTask = ref(null)
 const userStore = computed(() => {
   return useUsersStore()
 })
+// tokens verifier
+const {tokenVerifier} = useAccessTokenVerifier()
 
 // use router
 const route = useRoute()
@@ -159,14 +161,12 @@ const loadTasks = async function (taskID) {
 
   // try
   try {
-    // verify if user is true
-    if (!userStore.value.getUser) {
-      throw new Error('You are not logged in.');
-    }
+    // handle access tokens
+    const token = await tokenVerifier()
     // load data
     const data = await loadData(`http://localhost/v1/tasks/${taskID}`, {
       headers: {
-        Authorization: `${userStore.value.getUser?.accessToken}`,
+        Authorization: `${token}`,
       },
       cache: 'no-cache',
     })
@@ -277,10 +277,6 @@ const updateTask = async function (taskObj) {
 const submitForm = async function () {
   // try
   try {
-    // verify if user is true
-    if (!userStore.value.getUser) {
-      throw new Error('You are not logged in.');
-    }
     // date function
     const taskDeadline = new Date(deadlineTask.value)
     const taskDate = taskDeadline.getDate()
